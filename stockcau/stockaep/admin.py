@@ -3,3 +3,7 @@ from .models import *
 
 # Register your models here.
 admin.site.register(Tecnico)
+admin.site.register(Tipo)
+admin.site.register(Hardware)
+admin.site.register(Marca)
+admin.site.register(Modelo)

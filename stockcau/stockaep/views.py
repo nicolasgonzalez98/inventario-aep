@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User, auth
 from .models import *
-import pandas as pd
 import openpyxl
 # Create your views here.
 
@@ -17,7 +16,20 @@ def index(request):
             _row.append(col[row].value)
         data.append(_row)
     
-    print(data)
+    print(data[0])
+
+    for dato in data:
+        print(data[0][0])
+        tipo, create = Tipo.objects.get_or_create(name = dato[1])
+        print(tipo)
+        marca, create = Marca.objects.get_or_create(nombre = dato[2])
+        print(marca)
+        modelo, create = Modelo.objects.get_or_create(nombre = dato[3], marca = marca)
+        print(modelo)
+        ubicacion, create = Ubicacion.objects.get_or_create(nombre=dato[5])
+        print(ubicacion)
+        
+    
 
     return render(request, 'main.html')
 
