@@ -8,9 +8,14 @@
 </head>
 <body>
     {% include "navbar.html" %}
+
+    {% if link == 'index' %}
     <div class="container">
-        
+        index
     </div>
+    {% elif link == 'create' %}
+        {% include 'add_to_inventary.html' %}
+    {% endif %}
     
 </body>
 </html>

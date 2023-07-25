@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User, auth
 from .models import *
+from .forms import *
 import openpyxl
 
 ##Funciones
@@ -17,6 +18,8 @@ def index(request):
     df = openpyxl.load_workbook("Inventario.xlsx")
     dataframe = df.active
     data = []
+    ctx = {'link':'index'}
+    print(request.GET)
 
     for row in range(1, dataframe.max_row):
         _row=[row]
@@ -37,7 +40,7 @@ def index(request):
             print(dato[1:])
     
 
-    return render(request, 'main.html')
+    return render(request, 'main.html', ctx)
 
 def register(request):
     if request.method == 'POST':
@@ -90,3 +93,13 @@ def login(request):
 def logout(request):
     auth.logout(request)
     return redirect('login')
+
+def add_inventary(request):
+    form_add_inventary = HardwareForm()
+    ctx = {'link':'create'}
+    ctx['form_add_inventary'] = form_add_inventary
+    return render(request, 'main.html', ctx)
+
+def mi_vista(request):
+    # Aquí va la lógica de tu vista
+    return render(request, 'create_trade.html')
