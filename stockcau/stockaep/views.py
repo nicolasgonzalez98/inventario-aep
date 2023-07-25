@@ -3,6 +3,14 @@ from django.contrib import messages
 from django.contrib.auth.models import User, auth
 from .models import *
 import openpyxl
+
+##Funciones
+
+def mayus_minus(pal):
+    if pal[-1] == ' ':
+        pal[-1].replace(' ', '')
+    return pal.lower().capitalize()
+
 # Create your views here.
 
 def index(request):
@@ -16,19 +24,17 @@ def index(request):
             _row.append(col[row].value)
         data.append(_row)
     
-    print(data[0])
+    
 
     for dato in data:
-        print(data[0][0])
-        tipo, create = Tipo.objects.get_or_create(name = dato[1])
-        print(tipo)
-        marca, create = Marca.objects.get_or_create(nombre = dato[2])
-        print(marca)
-        modelo, create = Modelo.objects.get_or_create(nombre = dato[3], marca = marca)
-        print(modelo)
-        ubicacion, create = Ubicacion.objects.get_or_create(nombre=dato[5])
-        print(ubicacion)
-        
+        try:
+            tipo, create = Tipo.objects.get_or_create(name = mayus_minus(str(dato[1])))
+            marca, create = Marca.objects.get_or_create(nombre = mayus_minus(str(dato[2]))) 
+            modelo, create = Modelo.objects.get_or_create(nombre = mayus_minus(str(dato[3])), marca = marca)
+            ubicacion, create = Ubicacion.objects.get_or_create(nombre=mayus_minus(str(dato[5])))
+        except:
+            print(dato[0])
+            print(dato[1:])
     
 
     return render(request, 'main.html')
