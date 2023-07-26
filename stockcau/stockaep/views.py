@@ -15,30 +15,9 @@ def mayus_minus(pal):
 # Create your views here.
 
 def index(request):
-    df = openpyxl.load_workbook("Inventario.xlsx")
-    dataframe = df.active
-    data = []
     ctx = {'link':'index'}
-    print(request.GET)
-
-    for row in range(1, dataframe.max_row):
-        _row=[row]
-        for col in dataframe.iter_cols(1,dataframe.max_column):
-            _row.append(col[row].value)
-        data.append(_row)
     
-    
-
-    for dato in data:
-        try:
-            tipo, create = Tipo.objects.get_or_create(name = mayus_minus(str(dato[1])))
-            marca, create = Marca.objects.get_or_create(nombre = mayus_minus(str(dato[2]))) 
-            modelo, create = Modelo.objects.get_or_create(nombre = mayus_minus(str(dato[3])), marca = marca)
-            ubicacion, create = Ubicacion.objects.get_or_create(nombre=mayus_minus(str(dato[5])))
-        except:
-            print(dato[0])
-            print(dato[1:])
-    
+    ctx['data'] = Hardware.objects.all()
 
     return render(request, 'main.html', ctx)
 
@@ -100,6 +79,31 @@ def add_inventary(request):
     ctx['form_add_inventary'] = form_add_inventary
     return render(request, 'main.html', ctx)
 
-def mi_vista(request):
-    # Aquí va la lógica de tu vista
-    return render(request, 'create_trade.html')
+def reload(request):
+    df = openpyxl.load_workbook("Inventario.xlsx")
+    dataframe = df.active
+    data = []
+    ctx = {'link':'index'}
+
+    for row in range(1, dataframe.max_row):
+        _row=[row]
+        for col in dataframe.iter_cols(1,dataframe.max_column):
+            _row.append(col[row].value)
+        data.append(_row)
+    
+    
+
+    for dato in data:
+        
+            print(data)
+            tipo, create = Tipo.objects.get_or_create(name = mayus_minus(str(dato[1])))
+            marca, create = Marca.objects.get_or_create(nombre = mayus_minus(str(dato[2]))) 
+            modelo, create = Modelo.objects.get_or_create(nombre = mayus_minus(str(dato[3])), marca = marca)
+            ubicacion, create = Ubicacion.objects.get_or_create(nombre=mayus_minus(str(dato[5])))
+
+
+            hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, nro_de_serie=mayus_minus(str(dato[4])), estado=mayus_minus(str(dato[6])), observaciones = mayus_minus(str(dato[7])))
+            hard.save()
+        
+    
+    return redirect('index')

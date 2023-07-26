@@ -33,16 +33,15 @@ class Modelo(models.Model):
 
 class Ubicacion(models.Model):
     nombre = models.CharField(max_length=50)
-    
     def __str__(self):
         return self.nombre
 
 class Hardware(models.Model):
-    tipo = models.OneToOneField(Tipo, on_delete=models.CASCADE)
-    marca = models.OneToOneField(Marca, on_delete=models.CASCADE, default=1)
-    modelo = models.OneToOneField(Modelo, on_delete=models.CASCADE, default=1)
-    nro_de_serie = models.CharField(max_length=100, null=False, default='S/D')
-    ubicacion = models.OneToOneField(Ubicacion, on_delete=models.CASCADE, default=1)
+    tipo = models.ForeignKey(Tipo, on_delete=models.CASCADE)
+    marca = models.ForeignKey(Marca, on_delete=models.CASCADE)
+    modelo = models.ForeignKey(Modelo, on_delete=models.CASCADE)
+    nro_de_serie = models.CharField(max_length=100, null=False, default='')
+    ubicacion = models.ForeignKey(Ubicacion, on_delete=models.CASCADE)
     estado = models.CharField(max_length=100, default='')
     observaciones = models.TextField(max_length=500, default='')
 

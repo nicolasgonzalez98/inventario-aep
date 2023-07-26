@@ -1,0 +1,22 @@
+{% load static%}
+{% block content %}
+    <div class="container">
+        <div class="list-group container">
+            {% for row in data%}
+            <li href="#" class="row list-group-item list-group-item-action">
+                <div class="row">
+                    <div class="col">
+                        <h6>{{row.tipo}} - {{row.marca}}- {{row.modelo}}  </h6>
+                        <p>{{row.nro_de_serie}}</p>
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-danger">Eliminar</button>
+                        
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+            
+          </div>
+    </div>
+{% endblock %}
