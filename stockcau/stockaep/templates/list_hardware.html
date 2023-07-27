@@ -2,21 +2,99 @@
 {% block content %}
     <div class="container">
         <div class="list-group container">
+            
             {% for row in data%}
             <li href="#" class="row list-group-item list-group-item-action">
                 <div class="row">
                     <div class="col">
                         <h6>{{row.tipo}} - {{row.marca}}- {{row.modelo}}  </h6>
-                        <p>{{row.nro_de_serie}}</p>
+                        <small class="form-text text-muted">Nro. de serie: {{row.nro_de_serie}}</small>
                     </div>
                     <div class="row row-lg-2 p-3">
-                        <button class="btn btn-primary mr-3">Editar</button>
-                        <button class="btn btn-danger">Eliminar</button>
+                        <button class="btn btn-primary mr-3" data-toggle="modal" data-target="#ModalEdit{{row.id}}">Editar</button>
+                        <button class="btn btn-danger mr-3" data-toggle="modal" data-target="#Modal{{row.id}}"> &times; Eliminar</button>
                     </div>
                 </div>
             </li>
+
+            <!-- Modal Edit-->
+            <div class="modal fade" id="ModalEdit{{row.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Eliminar</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                    <h4>Editar</h4>
+                    <form method="POST" action="" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="editMarca">Marca: </label>
+                            <select name="marca" id="marca" class="form-control" required>
+                                { % for i in marcas % }
+                                    <option value="{{4564}}" >--------------</option>
+                                { % endfor %}
+                            </select>
+                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                          </div>
+                    </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <a style="text-decoration: none;" type="button" class="btn btn-success">Guardar cambios</a>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            <!-- Modal Delete-->
+            <div class="modal fade" id="Modal{{row.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Eliminar</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                    ¿Desea eliminar el hardware?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                        <a style="text-decoration: none;" href="/delete/{{row.id}}" type="button" class="btn btn-success">Si</a>
+                    </div>
+                </div>
+                </div>
+            </div>
             {% endfor %}
             
           </div>
     </div>
+{% endblock %}
+
+{% block javascript %}
+    <!-- Modal -->
+    <!-- <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Eliminar</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            ¿Desea eliminar el hardware?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                <a style="text-decoration: none;" href="/delete" type="button" class="btn btn-success">Si</a>
+            </div>
+        </div>
+        </div>
+    </div> -->
 {% endblock %}

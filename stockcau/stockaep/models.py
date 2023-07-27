@@ -40,7 +40,7 @@ class Hardware(models.Model):
     tipo = models.ForeignKey(Tipo, on_delete=models.CASCADE)
     marca = models.ForeignKey(Marca, on_delete=models.CASCADE)
     modelo = models.ForeignKey(Modelo, on_delete=models.CASCADE)
-    nro_de_serie = models.CharField(max_length=100, null=False, default='')
+    nro_de_serie = models.CharField(max_length=100, null=False, default='', unique=True)
     ubicacion = models.ForeignKey(Ubicacion, on_delete=models.CASCADE)
     estado = models.CharField(max_length=100, default='')
     observaciones = models.TextField(max_length=500, default='')

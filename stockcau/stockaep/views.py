@@ -16,9 +16,13 @@ def mayus_minus(pal):
 
 def index(request):
     ctx = {'link':'index'}
-    
+    form_edit = HardwareForm()
     ctx['data'] = Hardware.objects.all()
-
+    ctx['marcas'] = Marca.objects.all()
+    for i in ctx['marcas']:
+        print(i.nombre)
+    #ctx['form_edit'] = form_edit
+    ##print(form_edit)
     return render(request, 'main.html', ctx)
 
 def register(request):
@@ -107,3 +111,9 @@ def reload(request):
         
     
     return redirect('index')
+
+def delete(request, id):
+    hardware = Hardware.objects.get(id=id)
+    hardware.delete()
+    return redirect('index')
+
