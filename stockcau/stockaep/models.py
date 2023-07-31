@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.forms import model_to_dict
 
 # Create your models here.
 
@@ -30,6 +31,8 @@ class Modelo(models.Model):
     
     def __str__(self):
         return self.nombre
+    
+    
 
 class Ubicacion(models.Model):
     nombre = models.CharField(max_length=50)
@@ -45,5 +48,16 @@ class Hardware(models.Model):
     estado = models.CharField(max_length=100, default='')
     observaciones = models.TextField(max_length=500, default='')
 
+    def toJSON(self):
+        item = model_to_dict(self)
+        return item
+
     def __str__(self):
         return f'{self.tipo}'
+    
+    class Meta:
+        ordering = ['tipo']
+
+class Contador(models.Model):
+    tipo = models.ForeignKey(Tipo, on_delete=models.CASCADE)
+    cantidad = models.IntegerField(default=0)

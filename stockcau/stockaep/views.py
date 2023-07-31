@@ -5,6 +5,7 @@ from .models import *
 from .forms import *
 import openpyxl
 
+
 ##Funciones
 
 def mayus_minus(pal):
@@ -16,13 +17,8 @@ def mayus_minus(pal):
 
 def index(request):
     ctx = {'link':'index'}
-    form_edit = HardwareForm()
     ctx['data'] = Hardware.objects.all()
-    ctx['marcas'] = Marca.objects.all()
-    for i in ctx['marcas']:
-        print(i.nombre)
-    #ctx['form_edit'] = form_edit
-    ##print(form_edit)
+    
     return render(request, 'main.html', ctx)
 
 def register(request):
@@ -79,8 +75,15 @@ def logout(request):
 
 def add_inventary(request):
     form_add_inventary = HardwareForm()
+    
     ctx = {'link':'create'}
     ctx['form_add_inventary'] = form_add_inventary
+
+    if request.method == 'POST':
+        form = HardwareForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
     return render(request, 'main.html', ctx)
 
 def reload(request):
@@ -117,3 +120,10 @@ def delete(request, id):
     hardware.delete()
     return redirect('index')
 
+def edit(request, id):
+    to_edit = Hardware.objects.get(id=id)
+    ctx = {}
+    ctx['to_edit'] = to_edit
+    edit_form = HardwareForm(to_edit.toJSON())
+    ctx['edit_form'] = edit_form
+    return render(request, 'edit_hardware.html', ctx)

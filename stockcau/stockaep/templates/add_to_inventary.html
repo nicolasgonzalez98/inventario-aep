@@ -3,13 +3,62 @@
 
 <div class="container">
     <h3>Agregar a inventario</h3>
+    <form class="mb-3" method="POST" action="" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="form-group row">
+        <label for="tipo" class="col-sm-2 col-form-label">Tipo: </label>
+        <div class="col-sm-10">
+          {{form_add_inventary.tipo}}
+        </div>
+      </div>
 
-    {{form_add_inventary.marca}}
+      <div class="form-group row">
+        <label for="marca" class="col-sm-2 col-form-label">Marca: </label>
+        <div class="col-sm-10">
+          {{form_add_inventary.marca}}
+        </div>
+      </div>
 
+      <div class="form-group row">
+        <label for="modelo" class="col-sm-2 col-form-label">Modelo: </label>
+        <div class="col-sm-10">
+          {{form_add_inventary.modelo}}
+        </div>
+      </div>
 
-    <a href="" type="a" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-        Abrir ventana emergente
-    </a>
+      <div class="form-group row">
+        <label for="nro_de_serie" class="col-sm-2 col-form-label">Numero de serie: </label>
+        <div class="col-sm-10">
+          {{form_add_inventary.nro_de_serie}}
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="ubicacion" class="col-sm-2 col-form-label">Ubicación: </label>
+        <div class="col-sm-10">
+          {{form_add_inventary.ubicacion}}
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="ubicacion" class="col-sm-2 col-form-label">Estado: </label>
+        <div class="col-sm-10">
+          {{form_add_inventary.estado}}
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="ubicacion" class="col-sm-2 col-form-label">Observaciones: </label>
+        <div class="col-sm-10">
+          {{form_add_inventary.observaciones}}
+        </div>
+      </div>
+
+      <input class="btn btn-success" type="submit" value="Agregar a inventario" />
+      
+    </form>
+    
+    
     
 
 </div>
