@@ -126,4 +126,8 @@ def edit(request, id):
     ctx['to_edit'] = to_edit
     edit_form = HardwareForm(to_edit.toJSON())
     ctx['edit_form'] = edit_form
+    if request.method == 'POST':
+        form = HardwareForm(request.POST)
+        form.save()
+        return redirect('/')
     return render(request, 'edit_hardware.html', ctx)
