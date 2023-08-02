@@ -127,7 +127,15 @@ def edit(request, id):
     edit_form = HardwareForm(to_edit.toJSON())
     ctx['edit_form'] = edit_form
     if request.method == 'POST':
-        form = HardwareForm(request.POST)
-        form.save()
+        
+        to_edit.tipo  = Tipo.objects.get(id=request.POST['tipo'])
+        
+        # to_edit.marca = request.POST['marca']
+        # to_edit.modelo = request.POST['modelo']
+        # to_edit.nro_de_serie = request.POST['nro_de_serie']
+        # to_edit.ubicacion = request.POST['ubicacion']
+        # to_edit.estado = request.POST['estado']
+        # to_edit.observaciones = request.POST['observacionse']
+        to_edit.save()
         return redirect('/')
     return render(request, 'edit_hardware.html', ctx)
