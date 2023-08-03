@@ -4,6 +4,16 @@ from django.forms import model_to_dict
 
 # Create your models here.
 
+##Opciones
+
+ESTADOS_HARDWARE = (
+    ('1', 'Activo'),
+    ('2', 'En uso'),
+    ('3', 'Fuera de Servicio'),
+    ('4', 'Scrap'),
+    ('5', 'RMA')
+)
+
 User = get_user_model()
 
 class Tecnico(models.Model):
@@ -45,7 +55,7 @@ class Hardware(models.Model):
     modelo = models.ForeignKey(Modelo, on_delete=models.CASCADE)
     nro_de_serie = models.CharField(max_length=100, null=False, default='', unique=True)
     ubicacion = models.ForeignKey(Ubicacion, on_delete=models.CASCADE)
-    estado = models.CharField(max_length=100, default='')
+    estado = models.CharField(max_length=100, default='1', choices=ESTADOS_HARDWARE)
     observaciones = models.TextField(max_length=500, default='')
 
     def toJSON(self):
@@ -58,6 +68,6 @@ class Hardware(models.Model):
     class Meta:
         ordering = ['tipo']
 
-class Contador(models.Model):
-    tipo = models.ForeignKey(Tipo, on_delete=models.CASCADE)
-    cantidad = models.IntegerField(default=0)
+# class Contador(models.Model):
+#     tipo = models.ForeignKey(Tipo, on_delete=models.CASCADE)
+#     cantidad = models.IntegerField(default=0)

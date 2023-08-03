@@ -109,6 +109,9 @@ def reload(request):
             ubicacion, create = Ubicacion.objects.get_or_create(nombre=mayus_minus(str(dato[5])))
 
 
+            if dato[7] == None:
+                dato[7] = ''
+
             hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, nro_de_serie=mayus_minus(str(dato[4])), estado=mayus_minus(str(dato[6])), observaciones = mayus_minus(str(dato[7])))
             hard.save()
         
@@ -127,15 +130,13 @@ def edit(request, id):
     edit_form = HardwareForm(to_edit.toJSON())
     ctx['edit_form'] = edit_form
     if request.method == 'POST':
-        
         to_edit.tipo  = Tipo.objects.get(id=request.POST['tipo'])
-        
-        # to_edit.marca = request.POST['marca']
-        # to_edit.modelo = request.POST['modelo']
-        # to_edit.nro_de_serie = request.POST['nro_de_serie']
-        # to_edit.ubicacion = request.POST['ubicacion']
-        # to_edit.estado = request.POST['estado']
-        # to_edit.observaciones = request.POST['observacionse']
+        to_edit.marca = Marca.objects.get(id=request.POST['marca'])
+        to_edit.modelo = Modelo.objects.get(id=request.POST['modelo'])
+        to_edit.nro_de_serie = request.POST['nro_de_serie']
+        to_edit.ubicacion = Ubicacion.objects.get(id=request.POST['ubicacion'])
+        to_edit.estado = request.POST['estado']
+        to_edit.observaciones = request.POST['observaciones']
         to_edit.save()
         return redirect('/')
     return render(request, 'edit_hardware.html', ctx)

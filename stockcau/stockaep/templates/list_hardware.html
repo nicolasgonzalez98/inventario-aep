@@ -11,7 +11,7 @@
                         <small class="form-text text-muted">Nro. de serie: {{row.nro_de_serie}}</small>
                     </div>
                     <div class="row row-lg-2 p-3">
-                        <button class="btn btn-primary mr-3" data-toggle="modal" data-target="#ModalEdit{{row.id}}">Editar</button>
+                        <a href="/edit/{{row.id}}" class="btn btn-primary mr-3">Editar</a>
                         <button class="btn btn-danger mr-3" data-toggle="modal" data-target="#Modal{{row.id}}"> &times; Eliminar</button>
                     </div>
                 </div>
