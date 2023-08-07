@@ -3,7 +3,11 @@ from django.contrib import messages
 from django.contrib.auth.models import User, auth
 from .models import *
 from .forms import *
+from .decorators import *
 import openpyxl
+from django.contrib.auth.models import Group
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 
 
 ##Funciones
@@ -15,12 +19,14 @@ def mayus_minus(pal):
 
 # Create your views here.
 
+@login_required(login_url='login')
 def index(request):
     ctx = {'link':'index'}
     ctx['data'] = Hardware.objects.all()
     
     return render(request, 'main.html', ctx)
 
+@unauthorized_user
 def register(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -42,8 +48,9 @@ def register(request):
             else:
                 user = User.objects.create_user(username=username, email=email, password=password)
                 user.save()
-
+                group, create=Group.objects.get_or_create(name='user')
                 user_model = User.objects.get(username=username)
+                user_model.groups.add(group)
                 nuevo_tecnico = Tecnico.objects.create(user = user_model, id_user = user_model.id, nombre=name, apellido = surname)
                 nuevo_tecnico.save()
                 return redirect('login')
@@ -52,6 +59,7 @@ def register(request):
             return redirect('register') 
     return render(request,'signup.html')
 
+@unauthorized_user
 def login(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -69,10 +77,12 @@ def login(request):
             return redirect('login')
     return render(request, 'signin.html')
 
+@login_required(login_url='login')
 def logout(request):
     auth.logout(request)
     return redirect('login')
 
+@login_required(login_url='login')
 def add_inventary(request):
     form_add_inventary = HardwareForm()
     
@@ -86,6 +96,7 @@ def add_inventary(request):
             return redirect('/')
     return render(request, 'main.html', ctx)
 
+@login_required(login_url='login')
 def reload(request):
     df = openpyxl.load_workbook("Inventario.xlsx")
     dataframe = df.active
@@ -118,11 +129,13 @@ def reload(request):
     
     return redirect('index')
 
+@login_required(login_url='login')
 def delete(request, id):
     hardware = Hardware.objects.get(id=id)
     hardware.delete()
     return redirect('index')
 
+@login_required(login_url='login')
 def edit(request, id):
     to_edit = Hardware.objects.get(id=id)
     ctx = {}
@@ -140,3 +153,15 @@ def edit(request, id):
         to_edit.save()
         return redirect('/')
     return render(request, 'edit_hardware.html', ctx)
+
+def test(request):
+    ctx = {
+        'link':'test'
+    }
+    return render(request, 'main.html', ctx)
+
+def get_info(request):
+    data = list(Hardware.objects.values())
+    
+    return JsonResponse(data, safe=False)
+    
