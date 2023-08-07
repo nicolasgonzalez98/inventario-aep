@@ -8,7 +8,9 @@ import openpyxl
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-
+from django.shortcuts import render
+from django_filters.views import FilterView
+from .filters import HardwareFilter
 
 ##Funciones
 
@@ -164,4 +166,9 @@ def get_info(request):
     data = list(Hardware.objects.values())
     
     return JsonResponse(data, safe=False)
-    
+
+class ProductListView(FilterView):
+    model = Hardware
+    template_name = 'test.html'
+    paginate_by = 10
+    filterset_class = HardwareFilter
