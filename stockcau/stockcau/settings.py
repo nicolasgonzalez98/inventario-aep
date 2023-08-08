@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'stockaep'
+    'stockaep',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -81,6 +82,15 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+def FILTERS_VERBOSE_LOOKUPS():
+        from django_filters.conf import DEFAULTS
+
+        verbose_lookups = DEFAULTS['VERBOSE_LOOKUPS'].copy()
+        verbose_lookups.update({
+            'contains': '',
+        })
+        return verbose_lookups
 
 
 # Password validation

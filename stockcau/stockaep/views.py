@@ -8,13 +8,15 @@ import openpyxl
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from .filters import HardwareFilter
+from django_filters.views import FilterView
 
 
 ##Funciones
 
 def mayus_minus(pal):
     if pal[-1] == ' ':
-        pal[-1].replace(' ', '')
+        pal.strip()
     return pal.lower().capitalize()
 
 # Create your views here.
@@ -112,16 +114,14 @@ def reload(request):
     
 
     for dato in data:
-        
-            print(data)
             tipo, create = Tipo.objects.get_or_create(name = mayus_minus(str(dato[1])))
             marca, create = Marca.objects.get_or_create(nombre = mayus_minus(str(dato[2]))) 
             modelo, create = Modelo.objects.get_or_create(nombre = mayus_minus(str(dato[3])), marca = marca)
             ubicacion, create = Ubicacion.objects.get_or_create(nombre=mayus_minus(str(dato[5])))
 
 
-            if dato[7] == None:
-                dato[7] = ''
+            # if dato[7] == None:
+            #     dato[7] = ''
 
             hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, nro_de_serie=mayus_minus(str(dato[4])), estado=mayus_minus(str(dato[6])), observaciones = mayus_minus(str(dato[7])))
             hard.save()
@@ -155,8 +155,10 @@ def edit(request, id):
     return render(request, 'edit_hardware.html', ctx)
 
 def test(request):
+    f = HardwareFilter(request.GET, queryset=Hardware.objects.all())
     ctx = {
-        'link':'test'
+        'link':'test',
+        'filter':f
     }
     return render(request, 'main.html', ctx)
 

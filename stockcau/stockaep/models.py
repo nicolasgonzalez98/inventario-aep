@@ -26,12 +26,18 @@ class Tecnico(models.Model):
 
 class Tipo(models.Model):
     name = models.CharField(max_length=50, unique=True)
+
+    class Meta:
+        ordering = ['name']
     
     def __str__(self) -> str:
         return self.name
 
 class Marca(models.Model):
     nombre = models.CharField(max_length=50, null=False, default='S/D', unique=True)
+
+    class Meta:
+        ordering = ['nombre']
 
     def __str__(self):
         return self.nombre
