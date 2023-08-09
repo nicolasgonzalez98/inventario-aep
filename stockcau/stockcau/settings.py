@@ -89,6 +89,7 @@ def FILTERS_VERBOSE_LOOKUPS():
         verbose_lookups = DEFAULTS['VERBOSE_LOOKUPS'].copy()
         verbose_lookups.update({
             'contains': '',
+            'icontains': '',
         })
         return verbose_lookups
 

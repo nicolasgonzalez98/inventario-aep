@@ -17,5 +17,11 @@ class HardwareFilter(django_filters.FilterSet):
                      'lookup_expr': 'icontains',
                      'widget': forms.TextInput(attrs={'class': 'form-control'})
                  },
+             },
+             models.Choices: {
+                 'filter_class': django_filters.ModelChoiceFilter,
+                  'extra': lambda f: {
+                     'widget': forms.Select(attrs={'class': 'form-control'})
+                 }
              }
         }

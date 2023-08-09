@@ -15,8 +15,10 @@ from django_filters.views import FilterView
 ##Funciones
 
 def mayus_minus(pal):
+    pal.strip()
     if pal[-1] == ' ':
-        pal.strip()
+        print('entro')
+        pal.replace(' ', '')
     return pal.lower().capitalize()
 
 # Create your views here.
@@ -24,8 +26,8 @@ def mayus_minus(pal):
 @login_required(login_url='login')
 def index(request):
     ctx = {'link':'index'}
-    ctx['data'] = Hardware.objects.all()
-    
+    f = HardwareFilter(request.GET, queryset=Hardware.objects.all())
+    ctx['filter'] = f
     return render(request, 'main.html', ctx)
 
 @unauthorized_user
@@ -166,4 +168,9 @@ def get_info(request):
     data = list(Hardware.objects.values())
     
     return JsonResponse(data, safe=False)
-    
+
+class ProductListView(FilterView):
+    model = Hardware
+    template_name = 'test.html'
+    paginate_by = 10
+    filterset_class = HardwareFilter
