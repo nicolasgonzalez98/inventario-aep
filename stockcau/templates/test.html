@@ -2,22 +2,36 @@
 <div class="container p-3">
         
         <!-- Code for Filter form start-->
-        <a class="text-dark text-sm mb-1" href="{% url 'test' %}">x Clear Filters</a>
-        <form method="get">
-            <div style="display: grid"> 
-                {% for field in filter.form %}
-                    <div id="form-field-{{ forloop.counter0 }}">
+        <div class="input-group mb-3">
+            
+            <form method="get">
+                <div class="form-row" >
+                    {% for field in filter.form %}
+                    <div class="form-group col-md-6" id="form-field-{{ forloop.counter0 }}">
                         {{ field.label_tag }}
                         {{ field }}
                     </div>
-                {% endfor %}
-            </div>
-            <button type="submit" class="btn btn-dark mb-3 mt-2">Filter</button>
-        </form>
+                    {% endfor %}
+                </div>
+<!--                 
+                <div style="display: grid"> 
+                    
+                        <div class="input-group mb-3" >
+                            <div class="input-group-prepend">
+                                
+                            </div>
+                            
+                        </div>
+                    
+                </div> -->
+                <button type="submit" class="btn btn-dark mb-3 mt-2">Buscar</button>
+                <button class="button btn-danger mb-3 mt-2" href="{% url 'test' %}">x Limpiar filtro</button>
+            </form>
+        </div>
         <!-- Code for Filter form end-->
     </div>
 
-    <div class="col-md-9">
+    <div class="container p-3">
         <!-- Product List code start -->
         <table class="table">
             <thead>

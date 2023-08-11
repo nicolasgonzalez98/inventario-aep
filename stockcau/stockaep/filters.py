@@ -2,14 +2,48 @@ import django_filters
 from django.db import models
 from django import forms
 
-from .models import Hardware
+from .models import *
 
 
 class HardwareFilter(django_filters.FilterSet):
 
+    tipo = django_filters.ModelChoiceFilter(
+        queryset=Tipo.objects.all(),
+        empty_label="Cualquier tipo",
+        label="Tipo",
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        )
+    
+    marca = django_filters.ModelChoiceFilter(
+        queryset=Marca.objects.all(),
+        empty_label="Cualquier marca",
+        label="Marca",
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        )
+    
+    modelo = django_filters.ModelChoiceFilter(
+        queryset=Modelo.objects.all(),
+        empty_label="Cualquier modelo",
+        label="Modelo",
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        )
+    
+    ubicacion = django_filters.ModelChoiceFilter(
+        queryset = Ubicacion.objects.all(),
+        empty_label="Cualquier ubicación",
+        label="Ubicación",
+        widget=forms.Select(attrs={'class': 'form-control'}),
+    )
+
+    # estado = django_filters.ModelChoiceFilter(
+    #     queryset = ESTADOS_HARDWARE,
+    #     label="Estado",
+    #     widget=forms.Select(attrs={'class': 'form-control'}),
+    # )
+
     class Meta:
         model = Hardware
-        fields = ['nro_de_serie', 'tipo', 'marca', 'modelo']
+        fields = ['nro_de_serie', 'tipo', 'marca', 'modelo', 'ubicacion']
         filter_overrides = {
              models.CharField: {
                  'filter_class': django_filters.CharFilter,
@@ -17,11 +51,5 @@ class HardwareFilter(django_filters.FilterSet):
                      'lookup_expr': 'icontains',
                      'widget': forms.TextInput(attrs={'class': 'form-control'})
                  },
-             },
-             models.Choices: {
-                 'filter_class': django_filters.ModelChoiceFilter,
-                  'extra': lambda f: {
-                     'widget': forms.Select(attrs={'class': 'form-control'})
-                 }
              }
         }
