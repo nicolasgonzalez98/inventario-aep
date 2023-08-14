@@ -11,7 +11,11 @@ from django.http import JsonResponse
 from .filters import HardwareFilter
 from django_filters.views import FilterView
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+import json
+from django.core.serializers.json import DjangoJSONEncoder
+from django.db.models import Q
 
+PRODUCTS_PER_PAGE = 25
 
 ##Funciones
 
@@ -175,5 +179,6 @@ def get_info(request):
 class ProductListView(FilterView):
     model = Hardware
     template_name = 'test.html'
-    paginate_by = 10
+    paginate_by = 25
     filterset_class = HardwareFilter
+    context_object_name = 'hardware'
