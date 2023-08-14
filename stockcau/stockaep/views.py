@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from .filters import HardwareFilter
 from django_filters.views import FilterView
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 
 ##Funciones
@@ -157,6 +158,8 @@ def edit(request, id):
     return render(request, 'edit_hardware.html', ctx)
 
 def test(request):
+    page = request.GET.get('page',1)
+    print(page)
     f = HardwareFilter(request.GET, queryset=Hardware.objects.all())
     ctx = {
         'link':'test',
