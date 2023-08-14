@@ -163,11 +163,18 @@ def edit(request, id):
 
 def test(request):
     page = request.GET.get('page',1)
-    
+    print(page)
     f = HardwareFilter(request.GET, queryset=Hardware.objects.all())
+    
+    product_paginator = Paginator(list(f.qs), PRODUCTS_PER_PAGE)
+    
+    total = product_paginator.page(page).object_list
+    
+    
     ctx = {
         'link':'test',
-        'filter':f
+        'filter':f,
+        'product_paginator': total
     }
     return render(request, 'main.html', ctx)
 
