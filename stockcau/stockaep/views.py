@@ -163,7 +163,7 @@ def edit(request, id):
 
 def test(request):
     page = request.GET.get('page',1)
-    print(page)
+    
     f = HardwareFilter(request.GET, queryset=Hardware.objects.all())
     ctx = {
         'link':'test',
