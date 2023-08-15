@@ -30,9 +30,20 @@ def mayus_minus(pal):
 
 @login_required(login_url='login')
 def index(request):
-    ctx = {'link':'index'}
+    page = request.GET.get('page',1)
+    
     f = HardwareFilter(request.GET, queryset=Hardware.objects.all())
-    ctx['filter'] = f
+    
+    product_paginator = Paginator(list(f.qs), PRODUCTS_PER_PAGE)
+    
+    pagina = product_paginator.page(page)
+
+    ctx = {
+        'link':'index',
+        'filter':f,
+        'pagina': pagina,
+        'paginator':product_paginator
+    }
     return render(request, 'main.html', ctx)
 
 @unauthorized_user
@@ -163,18 +174,19 @@ def edit(request, id):
 
 def test(request):
     page = request.GET.get('page',1)
-    print(page)
+    
     f = HardwareFilter(request.GET, queryset=Hardware.objects.all())
     
     product_paginator = Paginator(list(f.qs), PRODUCTS_PER_PAGE)
     
-    total = product_paginator.page(page).object_list
+    pagina = product_paginator.page(page)
     
     
     ctx = {
         'link':'test',
         'filter':f,
-        'product_paginator': total
+        'pagina': pagina,
+        'paginator':product_paginator
     }
     return render(request, 'main.html', ctx)
 

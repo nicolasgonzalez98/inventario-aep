@@ -1,84 +1,77 @@
 {% load static%}
 {% block content %}
-    <div class="container">
-        <div>
-            <a class="text-dark text-sm mb-1" href="{% url 'test' %}">x Clear Filters</a>
-            <form method="get">
-                <div style="display: grid"> 
-                    {% for field in filter.form %}
-                        <div id="form-field-{{ forloop.counter0 }}">
-                            {{ field.label_tag }}
-                            {{ field }}
-                        </div>
-                    {% endfor %}
+<div class="container p-3">
+ <!-- Code for Filter form start-->
+    <div class="input-group mb-3">
+                
+        <form method="get">
+            <div class="form-row" >
+                {% for field in filter.form %}
+                <div class="form-group col-md-6" id="form-field-{{ forloop.counter0 }}">
+                    {{ field.label_tag }}
+                    {{ field }}
                 </div>
-                <button type="submit" class="btn btn-dark mb-3 mt-2">Filter</button>
-            </form>
-        </div>
-        <div class="list-group container">
-            
-            {% for row in data%}
-            <li href="#" class="row list-group-item list-group-item-action">
-                <div class="row">
-                    <div class="col">
-                        <h6>{{row.tipo}} - {{row.marca}}- {{row.modelo}}  </h6>
-                        <small class="form-text text-muted">Nro. de serie: {{row.nro_de_serie}}</small>
-                    </div>
-                    <div class="row row-lg-2 p-3">
-                        <a href="/edit/{{row.id}}" class="btn btn-primary mr-3">Editar</a>
-                        <button class="btn btn-danger mr-3" data-toggle="modal" data-target="#Modal{{row.id}}"> &times; Eliminar</button>
-                    </div>
-                </div>
-            </li>
+                {% endfor %}
+            </div>
 
-
-            <!-- Modal Delete-->
-            
-            <div class="modal fade" id="Modal{{row.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Eliminar</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    </div>
-                    <div class="modal-body">
-                    ¿Desea eliminar el hardware?
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
-                        <a style="text-decoration: none;" href="/delete/{{row.id}}" type="button" class="btn btn-success">Si</a>
-                    </div>
-                </div>
-                </div>
-            </div> 
-       
-            {% endfor %}
-            
-          </div>
+            <button type="submit" class="btn btn-dark mb-3 mt-2">Buscar</button>
+            <button class="button btn-danger mb-3 mt-2" href="{% url 'test' %}">x Limpiar filtro</button>
+        </form>
     </div>
-{% endblock %}
+    <!-- Code for Filter form end-->
+    </div>
 
-{% block javascript %}
-    <!-- Modal -->
-    <!-- <div class="modal fade" id="Modal{{id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Eliminar</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
-            <div class="modal-body">
-            ¿Desea eliminar el hardware?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
-                <a style="text-decoration: none;" href="/delete" type="button" class="btn btn-success">Si</a>
-            </div>
-        </div>
-        </div>
-    </div> -->
+    <div class="container p-3">
+    <!-- Product List code start -->
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Marca</th>
+            <th scope="col">Modelo</th>
+            <th scope="col">Nro. de serie</th>
+            <th scope="col">Ubicacion</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for hardware in pagina.object_list %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ hardware.tipo }}</td>
+                <td>{{ hardware.marca }}</td>
+                <td>{{ hardware.modelo }}</td>
+                <td>{{ hardware.nro_de_serie }}</td>
+                <td>{{ hardware.ubicacion }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table> 
+<!-- Product List code end -->
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            {% if pagina.has_previous %}
+            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+            {% endif %}
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" onclick="nueva_url(e, 2)" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            {% if pagina.has_next %}
+            <li class="page-item"><a class="page-link" href="/?page={{ pagina.next_page_number }}">Next</a></li>
+            {% endif %}
+        
+        </ul>
+    </nav>
+</div>
 {% endblock %}
+<script>
+    console.log(window.location.href+'&page=2')
+
+    function nueva_url(e, numero){
+        console.log(e)
+        let url = new URL(window.location.href)
+        window.location.href = url + '/prueba_nicolas' + numero
+    //return url
+    }
+</script>

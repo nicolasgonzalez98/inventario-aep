@@ -13,17 +13,7 @@
                     </div>
                     {% endfor %}
                 </div>
-<!--                 
-                <div style="display: grid"> 
-                    
-                        <div class="input-group mb-3" >
-                            <div class="input-group-prepend">
-                                
-                            </div>
-                            
-                        </div>
-                    
-                </div> -->
+
                 <button type="submit" class="btn btn-dark mb-3 mt-2">Buscar</button>
                 <button class="button btn-danger mb-3 mt-2" href="{% url 'test' %}">x Limpiar filtro</button>
             </form>
@@ -45,7 +35,7 @@
               </tr>
             </thead>
             <tbody>
-                {% for hardware in product_paginator %}
+                {% for hardware in pagina.object_list %}
                 <tr>
                     <th scope="row">{{ forloop.counter }}</th>
                     <td>{{ hardware.tipo }}</td>
@@ -61,11 +51,16 @@
 
         <nav aria-label="Page navigation example">
             <ul class="pagination">
-              <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                {% if pagina.has_previous %}
+                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                {% endif %}
               <li class="page-item"><a class="page-link" href="#">1</a></li>
-              <li class="page-item"><a class="page-link" href="{{window.location.href}}&page=2">2</a></li>
+              <li class="page-item"><a class="page-link" onclick="nueva_url(e)" href="#">2</a></li>
               <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                {% if pagina.has_next %}
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                {% endif %}
+              
             </ul>
           </nav>
     </div>
@@ -76,7 +71,7 @@
 
     function nueva_url(numero){
         let url = new URL(window.location.href)
-        window.location.href = url + '/prueba_nicolas' + numero
+        console.log(e)
         //return url
     }
 </script>
