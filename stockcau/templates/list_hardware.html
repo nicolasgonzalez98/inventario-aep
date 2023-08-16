@@ -15,8 +15,9 @@
             </div>
 
             <button type="submit" class="btn btn-dark mb-3 mt-2">Buscar</button>
-            <button class="button btn-danger mb-3 mt-2" href="{% url 'test' %}">x Limpiar filtro</button>
+            
         </form>
+        <button class="button btn-danger mb-3 mt-2" href="{% url 'test' %}">x Limpiar filtro</button>
     </div>
     <!-- Code for Filter form end-->
     </div>
@@ -54,9 +55,9 @@
             {% if pagina.has_previous %}
             <li class="page-item"><a class="page-link" href="#">Previous</a></li>
             {% endif %}
-            <li class="page-item"><a class="page-link" id="link-page" href="?page=1">1</a></li>
-            <li class="page-item"><a class="page-link" id="link-page" href="?page=2">2</a></li>
-            <li class="page-item"><a class="page-link" id="link-page" href="?page=3">3</a></li>
+            <li class="page-item"><a class="page-link" id="link-page" href="page=1">1</a></li>
+            <li class="page-item"><a class="page-link" id="link-page" href="page=2">2</a></li>
+            <li class="page-item"><a class="page-link" id="link-page" href="page=3">3</a></li>
             {% if pagina.has_next %}
             <li class="page-item"><a class="page-link" href="/?page={{ pagina.next_page_number }}">Next</a></li>
             {% endif %}
@@ -66,16 +67,21 @@
 </div>
 {% endblock %}
 <script>
-    let nueva_url = new URL(window.location.href)
-    console.log(nueva_url)
-    let link = document.querySelectorAll('#link-page')
+    // let nueva_url = new URL(window.location.href)
+    // console.log(nueva_url)
+    // let link = document.querySelectorAll('#link-page')
 
-    for(let i = 0; i < link.length; i++){
+    // for(let i = 0; i < link.length; i++){
         
-        link[i].addEventListener('click', () => {
-            console.log(link[i].href.split(nueva_url.origin))
-            link[i].href = nueva_url.search + '&'+link[i].href.split(nueva_url.origin+'/')[1]
-        })
-    }
+    //     link[i].addEventListener('click', () => {
+    //         console.log(link[i].href.split(nueva_url.origin))
+    //         if(!nueva_url.search.length){
+    //             link[i].href = '?'+link[i].href.split(nueva_url.origin+'/')[1]
+    //         }else{
+    //             link[i].href = nueva_url.search + '&'+link[i].href.split(nueva_url.origin+'/')[1]
+    //         }
+            
+    //     })
+    // }
 
 </script>
