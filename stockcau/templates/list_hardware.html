@@ -67,21 +67,21 @@
 </div>
 {% endblock %}
 <script>
-    // let nueva_url = new URL(window.location.href)
-    // console.log(nueva_url)
-    // let link = document.querySelectorAll('#link-page')
+    let nueva_url = new URL(window.location.href)
+    console.log(nueva_url)
+    let link = document.querySelectorAll('#link-page')
 
-    // for(let i = 0; i < link.length; i++){
-        
-    //     link[i].addEventListener('click', () => {
-    //         console.log(link[i].href.split(nueva_url.origin))
-    //         if(!nueva_url.search.length){
-    //             link[i].href = '?'+link[i].href.split(nueva_url.origin+'/')[1]
-    //         }else{
-    //             link[i].href = nueva_url.search + '&'+link[i].href.split(nueva_url.origin+'/')[1]
-    //         }
+    for(let i = 0; i < link.length; i++){
+        //Agregar switch y buscar include en Py 
+        link[i].addEventListener('click', () => {
+            console.log(link[i].href.split(nueva_url.origin))
+            if(!nueva_url.search.length){
+                link[i].href = '?'+link[i].href.split(nueva_url.origin+'/')[1]
+            }else{
+                link[i].href = nueva_url.search + '&'+link[i].href.split(nueva_url.origin+'/')[1]
+            }
             
-    //     })
-    // }
+        })
+    }
 
 </script>
