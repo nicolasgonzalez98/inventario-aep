@@ -54,9 +54,9 @@
             {% if pagina.has_previous %}
             <li class="page-item"><a class="page-link" href="#">Previous</a></li>
             {% endif %}
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" onclick="nueva_url(e, 2)" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" id="link-page" href="?page=1">1</a></li>
+            <li class="page-item"><a class="page-link" id="link-page" href="?page=2">2</a></li>
+            <li class="page-item"><a class="page-link" id="link-page" href="?page=3">3</a></li>
             {% if pagina.has_next %}
             <li class="page-item"><a class="page-link" href="/?page={{ pagina.next_page_number }}">Next</a></li>
             {% endif %}
@@ -66,12 +66,16 @@
 </div>
 {% endblock %}
 <script>
-    console.log(window.location.href+'&page=2')
+    let nueva_url = new URL(window.location.href)
+    console.log(nueva_url)
+    let link = document.querySelectorAll('#link-page')
 
-    function nueva_url(e, numero){
-        console.log(e)
-        let url = new URL(window.location.href)
-        window.location.href = url + '/prueba_nicolas' + numero
-    //return url
+    for(let i = 0; i < link.length; i++){
+        
+        link[i].addEventListener('click', () => {
+            console.log(link[i].href.split(nueva_url.origin))
+            link[i].href = nueva_url.search + '&'+link[i].href.split(nueva_url.origin+'/')[1]
+        })
     }
+
 </script>
