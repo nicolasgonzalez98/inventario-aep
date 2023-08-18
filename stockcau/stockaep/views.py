@@ -42,7 +42,8 @@ def index(request):
         'link':'index',
         'filter':f,
         'pagina': pagina,
-        'paginator':product_paginator
+        'paginator':product_paginator,
+        'cant_pags':product_paginator.page_range
     }
     return render(request, 'main.html', ctx)
 
@@ -141,7 +142,7 @@ def reload(request):
             # if dato[7] == None:
             #     dato[7] = ''
 
-            hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, nro_de_serie=mayus_minus(str(dato[4])), estado=mayus_minus(str(dato[6])), observaciones = mayus_minus(str(dato[7])))
+            hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, nro_de_serie=mayus_minus(str(dato[4])), observaciones = mayus_minus(str(dato[7])))
             hard.save()
         
     

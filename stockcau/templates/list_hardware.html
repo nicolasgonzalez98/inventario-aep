@@ -16,8 +16,9 @@
 
             <button type="submit" class="btn btn-dark mb-3 mt-2">Buscar</button>
             
+            <a as="button" class="button btn-danger mb-3 mt-2 p-2" href="{% url 'index' %}">x Limpiar filtro</a>
         </form>
-        <a class="button btn-danger mb-3 mt-2" href="{% url 'index' %}">x Limpiar filtro</a>
+        
     </div>
     <!-- Code for Filter form end-->
     </div>
@@ -33,6 +34,7 @@
             <th scope="col">Modelo</th>
             <th scope="col">Nro. de serie</th>
             <th scope="col">Ubicacion</th>
+            <th scope="col">Estado</th>
         </tr>
         </thead>
         <tbody>
@@ -44,6 +46,7 @@
                 <td>{{ hardware.modelo }}</td>
                 <td>{{ hardware.nro_de_serie }}</td>
                 <td>{{ hardware.ubicacion }}</td>
+                <td>{{hardware.estado}}</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -53,13 +56,14 @@
     <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
             {% if pagina.has_previous %}
-            <li class="page-item"><a class="page-link" id="link-page" href="/page={{ pagina.previous_page_number }}">Previous</a></li>
+            <li class="page-item"><a class="page-link" id="link-page" href="page={{ pagina.previous_page_number }}">Previous</a></li>
             {% endif %}
-            <li class="page-item"><a class="page-link" id="link-page" href="page=1">1</a></li>
-            <li class="page-item"><a class="page-link" id="link-page" href="page=2">2</a></li>
-            <li class="page-item"><a class="page-link" id="link-page" href="page=3">3</a></li>
+            {% for i in cant_pags %}
+                <li class="page-item"><a class="page-link" id="link-page" href="page={{i}}">{{i}}</a></li>
+            {% endfor %}
+            
             {% if pagina.has_next %}
-            <li class="page-item"><a class="page-link" id="link-page" href="/page={{ pagina.next_page_number }}">Next</a></li>
+            <li class="page-item"><a class="page-link" id="link-page" href="page={{ pagina.next_page_number }}">Next</a></li>
             {% endif %}
         
         </ul>
@@ -68,17 +72,22 @@
 {% endblock %}
 <script>
     let nueva_url = new URL(window.location.href)
-    console.log(nueva_url)
     let link = document.querySelectorAll('#link-page')
 
     for(let i = 0; i < link.length; i++){
         //Agregar switch y buscar include en Py 
         link[i].addEventListener('click', () => {
-            console.log(nueva_url.search.split('page='))
-            if(!nueva_url.search.length){
-                link[i].href = '?'+link[i].href.split(nueva_url.origin+'/')[1]
+            if(!nueva_url.search.includes('?nro_de_serie')){
+                
+                link[i].href = ('?'+link[i].href.split(nueva_url.origin+'/')[1]).replace('&', '')
             }else{
-                link[i].href = nueva_url.search.split('page=')[0] +link[i].href.split(nueva_url.origin+'/')[1]
+                if(nueva_url.search.includes('&page=')){
+                    
+                    link[i].href = nueva_url.search.split('&page=')[0]+'&'+link[i].href.split(nueva_url.origin+'/')[1]
+                }else{
+                    
+                    link[i].href = nueva_url.search.split('page=')[0] +'&'+link[i].href.split(nueva_url.origin+'/')[1]    
+                }
             }
             
         })
