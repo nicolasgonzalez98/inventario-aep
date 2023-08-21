@@ -137,12 +137,12 @@ def reload(request):
             marca, create = Marca.objects.get_or_create(nombre = mayus_minus(str(dato[2]))) 
             modelo, create = Modelo.objects.get_or_create(nombre = mayus_minus(str(dato[3])), marca = marca)
             ubicacion, create = Ubicacion.objects.get_or_create(nombre=mayus_minus(str(dato[5])))
-
+            estado, create = Estado.objects.get_or_create(nombre = 'Activo')
 
             # if dato[7] == None:
             #     dato[7] = ''
 
-            hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, nro_de_serie=mayus_minus(str(dato[4])), observaciones = mayus_minus(str(dato[7])))
+            hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, estado = estado, nro_de_serie=mayus_minus(str(dato[4])), observaciones = mayus_minus(str(dato[7])))
             hard.save()
         
     

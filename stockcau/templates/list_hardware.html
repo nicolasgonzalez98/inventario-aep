@@ -28,25 +28,27 @@
     <table class="table">
         <thead>
         <tr>
-            <th scope="col">#</th>
+            
             <th scope="col">Tipo</th>
             <th scope="col">Marca</th>
             <th scope="col">Modelo</th>
             <th scope="col">Nro. de serie</th>
             <th scope="col">Ubicacion</th>
             <th scope="col">Estado</th>
+            <th scope="col">Editar</th>
         </tr>
         </thead>
         <tbody>
             {% for hardware in pagina.object_list %}
             <tr>
-                <th scope="row">{{ forloop.counter }}</th>
+                
                 <td>{{ hardware.tipo }}</td>
                 <td>{{ hardware.marca }}</td>
                 <td>{{ hardware.modelo }}</td>
                 <td>{{ hardware.nro_de_serie }}</td>
                 <td>{{ hardware.ubicacion }}</td>
                 <td>{{hardware.estado}}</td>
+                <td><button class="btn btn-dark">Editar</button></td>
             </tr>
             {% endfor %}
         </tbody>

@@ -56,13 +56,26 @@ class Ubicacion(models.Model):
     def __str__(self):
         return self.nombre
 
+class Estado(models.Model):
+    estados_hardware = (
+    ('Activo', 'Activo'),
+    ('En uso', 'En uso'),
+    ('Fuera de Servicio', 'Fuera de Servicio'),
+    ('Scrap', 'Scrap'),
+    ('Scrap', 'RMA')
+)
+    nombre = models.CharField(choices=estados_hardware, max_length=50)
+
+    def __str__(self):
+        return f'{self.nombre}'
+
 class Hardware(models.Model):
     tipo = models.ForeignKey(Tipo, on_delete=models.CASCADE)
     marca = models.ForeignKey(Marca, on_delete=models.CASCADE)
     modelo = models.ForeignKey(Modelo, on_delete=models.CASCADE)
-    nro_de_serie = models.CharField(max_length=100, null=False, default='', unique=True)
+    nro_de_serie = models.CharField(max_length=100, null=False, default='')
     ubicacion = models.ForeignKey(Ubicacion, on_delete=models.CASCADE)
-    estado = models.CharField(max_length=100, default='1', choices=ESTADOS_HARDWARE)
+    estado = models.ForeignKey(Estado, on_delete=models.CASCADE)
     observaciones = models.TextField(max_length=500, default='')
 
     def toJSON(self):
