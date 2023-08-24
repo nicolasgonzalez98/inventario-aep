@@ -30,6 +30,7 @@ def mayus_minus(pal):
 
 @login_required(login_url='login')
 def index(request):
+    print(request.user.groups.all()[0])
     page = request.GET.get('page',1)
     
     f = HardwareFilter(request.GET, queryset=Hardware.objects.all())
@@ -45,6 +46,7 @@ def index(request):
         'paginator':product_paginator,
         'cant_pags':product_paginator.page_range
     }
+    
     return render(request, 'main.html', ctx)
 
 @unauthorized_user
@@ -161,17 +163,22 @@ def edit(request, id):
     ctx['to_edit'] = to_edit
     edit_form = HardwareForm(to_edit.toJSON())
     ctx['edit_form'] = edit_form
+    ctx['link'] = 'edit'
+    print(request.user.is_staff)
     if request.method == 'POST':
-        to_edit.tipo  = Tipo.objects.get(id=request.POST['tipo'])
-        to_edit.marca = Marca.objects.get(id=request.POST['marca'])
-        to_edit.modelo = Modelo.objects.get(id=request.POST['modelo'])
-        to_edit.nro_de_serie = request.POST['nro_de_serie']
-        to_edit.ubicacion = Ubicacion.objects.get(id=request.POST['ubicacion'])
-        to_edit.estado = request.POST['estado']
-        to_edit.observaciones = request.POST['observaciones']
-        to_edit.save()
+        if(request.user.is_staff):
+            to_edit.tipo  = Tipo.objects.get(id=request.POST['tipo'])
+            to_edit.marca = Marca.objects.get(id=request.POST['marca'])
+            to_edit.modelo = Modelo.objects.get(id=request.POST['modelo'])
+            to_edit.nro_de_serie = request.POST['nro_de_serie']
+            to_edit.ubicacion = Ubicacion.objects.get(id=request.POST['ubicacion'])
+            to_edit.estado = request.POST['estado']
+            to_edit.observaciones = request.POST['observaciones']
+            to_edit.save()
+        
         return redirect('/')
-    return render(request, 'edit_hardware.html', ctx)
+    
+    return render(request, 'main.html', ctx)
 
 def test(request):
     page = request.GET.get('page',1)

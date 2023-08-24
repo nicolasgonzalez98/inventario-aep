@@ -16,7 +16,7 @@
 
             <button type="submit" class="btn btn-dark mb-3 mt-2">Buscar</button>
             
-            <a as="button" class="button btn-danger mb-3 mt-2 p-2" href="{% url 'index' %}">x Limpiar filtro</a>
+            <a as="button" class="btn btn-danger mb-3 mt-2" href="{% url 'index' %}">&times;Limpiar filtro</a>
         </form>
         
     </div>
@@ -49,9 +49,32 @@
                 <td>{{ hardware.nro_de_serie }}</td>
                 <td>{{ hardware.ubicacion }}</td>
                 <td>{{hardware.estado}}</td>
-                <td><button class="btn btn-dark">Editar</button></td>
+                <td><a class="btn btn-dark" href="edit/{{hardware.id}}">Editar</a></td>
+                <td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete-{{hardware.id}}">Eliminar</button></td>
             </tr>
+
+            <!-- Modal delete -->
+            <div class="modal fade" id="delete-{{hardware.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                    ¿Estas seguro de eliminar {{hardware.tipo}} {{hardware.marca}} - {{hardware.nro_de_serie}} de tu inventario?
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <a href="delete/{{hardware.id}}" type="button" class="btn btn-danger">Eliminar</a>
+                    </div>
+                </div>
+                </div>
+            </div>
             {% endfor %}
+            
         </tbody>
     </table> 
 <!-- Product List code end -->
