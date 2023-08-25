@@ -30,7 +30,7 @@ def mayus_minus(pal):
 
 @login_required(login_url='login')
 def index(request):
-    print(request.user.groups.all()[0])
+    
     page = request.GET.get('page',1)
     
     f = HardwareFilter(request.GET, queryset=Hardware.objects.all())
@@ -115,7 +115,17 @@ def add_inventary(request):
     if request.method == 'POST':
         form = HardwareForm(request.POST)
         if form.is_valid():
-            form.save()
+            tipo, create = Tipo.objects.get_or_create(id = request.POST['tipo'])
+            marca, create = Marca.objects.get_or_create(id = request.POST['marca']) 
+            modelo = Modelo.objects.get(id = request.POST['modelo'])
+            ubicacion, create = Ubicacion.objects.get_or_create(id=request.POST['ubicacion'])
+            estado, create = Estado.objects.get_or_create(id = request.POST['estado'])
+            
+            hardware = Hardware.objects.create(tipo = tipo, marca=marca, modelo=modelo,ubicacion=ubicacion, estado = estado, nro_de_serie=request.POST['nro_de_serie'], observaciones = request.POST['observaciones'])
+            
+            if(request.user.is_staff == False):
+                Notificacion.objects.create(hardware=hardware, usuario = request.user, tipo = 'CREATE')
+            
             return redirect('/')
     return render(request, 'main.html', ctx)
 
@@ -152,9 +162,15 @@ def reload(request):
 
 @login_required(login_url='login')
 def delete(request, id):
-    hardware = Hardware.objects.get(id=id)
-    hardware.delete()
-    return redirect('index')
+    if(request.user.is_staff):
+        hardware = Hardware.objects.get(id=id)
+        hardware.delete()
+        return redirect('index')
+    else:
+        hardware = Hardware.objects.get(id=id)
+        usuario = User.objects.get(username = request.user)
+        Notificacion.objects.create(hardware=hardware, usuario = usuario, tipo = 'DELETE')
+        return redirect('index')
 
 @login_required(login_url='login')
 def edit(request, id):
@@ -164,17 +180,30 @@ def edit(request, id):
     edit_form = HardwareForm(to_edit.toJSON())
     ctx['edit_form'] = edit_form
     ctx['link'] = 'edit'
-    print(request.user.is_staff)
+    
+    
     if request.method == 'POST':
+        
+        to_edit.tipo  = Tipo.objects.get(id=request.POST['tipo'])
+        to_edit.marca = Marca.objects.get(id=request.POST['marca'])
+        to_edit.modelo = Modelo.objects.get(id=request.POST['modelo'])
+        to_edit.ubicacion = Ubicacion.objects.get(id=request.POST['ubicacion'])
+        to_edit.observaciones = request.POST['observaciones']
         if(request.user.is_staff):
-            to_edit.tipo  = Tipo.objects.get(id=request.POST['tipo'])
-            to_edit.marca = Marca.objects.get(id=request.POST['marca'])
-            to_edit.modelo = Modelo.objects.get(id=request.POST['modelo'])
             to_edit.nro_de_serie = request.POST['nro_de_serie']
-            to_edit.ubicacion = Ubicacion.objects.get(id=request.POST['ubicacion'])
-            to_edit.estado = request.POST['estado']
-            to_edit.observaciones = request.POST['observaciones']
-            to_edit.save()
+            to_edit.estado = Estado.objects.get(id=request.POST['estado'])
+        else:
+            nro_serie = ''
+            estado = ''
+            if to_edit.nro_de_serie != request.POST['nro_de_serie']:
+                print('cambio nro de serie')
+                nro_serie= request.POST['nro_de_serie']
+            if to_edit.estado != Estado.objects.get(id=request.POST['estado']):
+                print('Hubo cambio de estado')
+                estado= request.POST['estado']
+    
+            Notificacion.objects.create(hardware=to_edit, usuario = User.objects.get(username = request.user), tipo = 'EDIT', nro_de_serie = nro_serie, estado = estado)
+        to_edit.save()
         
         return redirect('/')
     
@@ -203,9 +232,6 @@ def get_info(request):
     
     return JsonResponse(data, safe=False)
 
-class ProductListView(FilterView):
-    model = Hardware
-    template_name = 'test.html'
-    paginate_by = 25
-    filterset_class = HardwareFilter
-    context_object_name = 'hardware'
+def accion_notificacion(request, id):
+    ctx={'link':'notificaciones'}
+    return render(request, 'main.html', ctx)

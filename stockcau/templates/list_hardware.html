@@ -64,7 +64,12 @@
                     </button>
                     </div>
                     <div class="modal-body">
-                    ¿Estas seguro de eliminar {{hardware.tipo}} {{hardware.marca}} - {{hardware.nro_de_serie}} de tu inventario?
+                    {% if user.is_staff %}
+                        ¿Estas seguro de eliminar {{hardware.tipo}} {{hardware.marca}} - {{hardware.nro_de_serie}} de tu inventario?
+                    {% else %}
+                        ¿Estas seguro de eliminar {{hardware.tipo}} {{hardware.marca}} - {{hardware.nro_de_serie}} de tu inventario?<br><br>
+                        <b>Se le enviara una solicitud al administrador para aprobar este cambio.</b>
+                    {% endif %}
                     </div>
                     <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>

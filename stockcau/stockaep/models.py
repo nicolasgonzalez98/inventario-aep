@@ -97,3 +97,5 @@ class Notificacion(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     realizado = models.BooleanField(default=False)
     tipo = models.CharField(max_length=20)
+    estado = models.CharField(max_length=50)
+    nro_de_serie = models.CharField(max_length=100)
