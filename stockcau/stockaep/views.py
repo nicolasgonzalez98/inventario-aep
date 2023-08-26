@@ -245,6 +245,10 @@ def accion_notificacion(request):
     id = request.GET.get('id')
     status = request.GET.get('status')
     notificacion = Notificacion.objects.get(id=id)
+
+    '''
+        Eliminar notificaciones que tengan hardware ya eliminado.
+    '''
     
     if (notificacion.tipo == 'CREATE' and status == 'cancel') or (notificacion.tipo == 'DELETE' and status == 'accept'):
         hardware = Hardware.objects.get(id = notificacion.hardware.id)
