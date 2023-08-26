@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
 from django.contrib.auth.models import User, auth
 from .models import *
@@ -196,11 +196,9 @@ def edit(request, id):
             nro_serie = ''
             estado = ''
             if to_edit.nro_de_serie != request.POST['nro_de_serie']:
-                print('cambio nro de serie')
                 nro_serie= request.POST['nro_de_serie']
             if to_edit.estado != Estado.objects.get(id=request.POST['estado']):
-                print('Hubo cambio de estado')
-                estado= request.POST['estado']
+                estado= (Estado.objects.get(id=request.POST['estado'])).nombre
     
             Notificacion.objects.create(hardware=to_edit, usuario = User.objects.get(username = request.user), tipo = 'EDIT', nro_de_serie = nro_serie, estado = estado)
         to_edit.save()
@@ -232,6 +230,34 @@ def get_info(request):
     
     return JsonResponse(data, safe=False)
 
-def accion_notificacion(request, id):
-    ctx={'link':'notificaciones'}
+@login_required(login_url='login')
+def notificaciones(request):
+    ctx={'link':'notification'}
+
+    notificaciones = Notificacion.objects.filter(realizado = False)
+    
+    ctx['notificaciones'] = notificaciones
+    ctx['cant_notificaciones'] = len(notificaciones)
     return render(request, 'main.html', ctx)
+
+@login_required(login_url='login')
+def accion_notificacion(request):
+    id = request.GET.get('id')
+    status = request.GET.get('status')
+    notificacion = Notificacion.objects.get(id=id)
+    
+    if (notificacion.tipo == 'CREATE' and status == 'cancel') or (notificacion.tipo == 'DELETE' and status == 'accept'):
+        hardware = Hardware.objects.get(id = notificacion.hardware.id)
+        hardware.delete()
+    elif(notificacion.tipo == 'EDIT' and status == 'accept'):
+        hardware = Hardware.objects.get(id = notificacion.hardware.id)
+        if notificacion.nro_de_serie:
+            hardware.nro_de_serie = notificacion.nro_de_serie
+        if notificacion.estado:
+            hardware.estado = Estado.objects.get(nombre = notificacion.estado)
+        hardware.save()
+
+    notificacion.realizado = True
+    notificacion.save()
+
+    return redirect(reverse('notifications') + f'?item={id}')

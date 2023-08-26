@@ -93,7 +93,7 @@ class Hardware(models.Model):
 #     cantidad = models.IntegerField(default=0)
 
 class Notificacion(models.Model):
-    hardware = models.ForeignKey(Hardware, on_delete=models.DO_NOTHING)
+    hardware = models.ForeignKey(Hardware, on_delete=models.DO_NOTHING, db_constraint=False)
     usuario = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     realizado = models.BooleanField(default=False)
     tipo = models.CharField(max_length=20)
