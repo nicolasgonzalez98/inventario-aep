@@ -4,8 +4,7 @@
     <h3>Tienes {{cant_notificaciones}} notificaciones</h3>
     <div class="list-group">
     {% for n in notificaciones%}
-        
-        <a href="#" class="list-group-item list-group-item-action
+        <a href="#" class="list-group-item list-group-item-action mb-3
         {% if n.tipo == 'DELETE' %}
             list-group-item-danger
         {% elif n.tipo == 'EDIT'%}
@@ -14,6 +13,7 @@
             list-group-item-success
         {% endif %}
         " aria-current="true">
+        
             <div class="d-flex w-100 justify-content-between">
                 {% if n.tipo == 'DELETE' %}
                     <h5 class="mb-1">{{n.usuario.username}} solicitó eliminar un articulo del inventario</h5>
@@ -52,7 +52,12 @@
             <p>Nro. de serie: <b>{{n.hardware.nro_de_serie}}</b></p>
             {% endif %}
             
+            <a as="button" class="btn btn-danger" href="action?id={{n.id}}&status=cancel">Denegar</a>
+            <a as="button" class="btn btn-success" href="action?id={{n.id}}&status=accept">Aprobar</a>
+            
+        
         </a>
+    
     {% endfor %}
     </div>
 </div>
