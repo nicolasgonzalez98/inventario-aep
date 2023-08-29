@@ -37,8 +37,12 @@ def index(request):
     
     product_paginator = Paginator(list(f.qs), PRODUCTS_PER_PAGE)
     
-    pagina = product_paginator.page(page)
-
+    try:
+        pagina = product_paginator.page(page)
+    except EmptyPage:
+        pagina = product_paginator.page(product_paginator.num_pages)
+    except:
+        pagina = product_paginator.page(product_paginator.num_pages)
     ctx = {
         'link':'index',
         'filter':f,
@@ -207,23 +211,23 @@ def edit(request, id):
     
     return render(request, 'main.html', ctx)
 
-def test(request):
-    page = request.GET.get('page',1)
+# def test(request):
+#     page = request.GET.get('page',1)
     
-    f = HardwareFilter(request.GET, queryset=Hardware.objects.all())
-    
-    product_paginator = Paginator(list(f.qs), PRODUCTS_PER_PAGE)
-    
-    pagina = product_paginator.page(page)
-    
-    
-    ctx = {
-        'link':'test',
-        'filter':f,
-        'pagina': pagina,
-        'paginator':product_paginator
-    }
-    return render(request, 'main.html', ctx)
+#     f = HardwareFilter(request.GET, queryset=Hardware.objects.all())
+#     product_paginator = Paginator(list(f.qs), PRODUCTS_PER_PAGE)
+#     try:
+#         pagina = product_paginator.page(page)
+#     except EmptyPage:
+#         print('hola')
+#         pagina = product_paginator.page('1')
+#     ctx = {
+#         'link':'test',
+#         'filter':f,
+#         'pagina': pagina,
+#         'paginator':product_paginator
+#     }
+#     return render(request, 'main.html', ctx)
 
 def get_info(request):
     data = list(Hardware.objects.values())
