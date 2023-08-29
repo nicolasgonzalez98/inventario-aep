@@ -88,9 +88,9 @@ class Hardware(models.Model):
     class Meta:
         ordering = ['tipo']
 
-# class Contador(models.Model):
-#     tipo = models.ForeignKey(Tipo, on_delete=models.CASCADE)
-#     cantidad = models.IntegerField(default=0)
+class Contador(models.Model):
+    nombre = models.CharField(max_length=50, null=False)
+    cantidad = models.IntegerField(default=0)
 
 class Notificacion(models.Model):
     hardware = models.ForeignKey(Hardware, on_delete=models.CASCADE, db_constraint=False)
