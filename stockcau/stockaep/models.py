@@ -92,6 +92,10 @@ class Contador(models.Model):
     nombre = models.CharField(max_length=50, null=False)
     cantidad = models.IntegerField(default=0)
 
+    def toJSON(self):
+        item = model_to_dict(self)
+        return item
+
 class Notificacion(models.Model):
     hardware = models.ForeignKey(Hardware, on_delete=models.CASCADE, db_constraint=False)
     usuario = models.ForeignKey(User, on_delete=models.DO_NOTHING)
@@ -100,6 +104,14 @@ class Notificacion(models.Model):
     estado = models.CharField(max_length=50)
     nro_de_serie = models.CharField(max_length=100)
 
+    def toJSON(self):
+        item = model_to_dict(self)
+        return item
+
 class Asignacion(models.Model):
     hardware = models.ManyToManyField(Hardware)
     usuario = models.CharField(max_length=50)
+
+    def toJSON(self):
+        item = model_to_dict(self)
+        return item
