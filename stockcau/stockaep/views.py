@@ -22,7 +22,6 @@ PRODUCTS_PER_PAGE = 25
 def mayus_minus(pal):
     pal.strip()
     if pal[-1] == ' ':
-        print('entro')
         pal.replace(' ', '')
     return pal.lower().capitalize()
 
@@ -134,6 +133,7 @@ def add_inventary(request):
     return render(request, 'main.html', ctx)
 
 @login_required(login_url='login')
+@admin_only
 def reload(request):
     df = openpyxl.load_workbook("Inventario.xlsx")
     dataframe = df.active
@@ -155,10 +155,12 @@ def reload(request):
             ubicacion, create = Ubicacion.objects.get_or_create(nombre=mayus_minus(str(dato[5])))
             estado, create = Estado.objects.get_or_create(nombre = 'Activo')
 
-            # if dato[7] == None:
-            #     dato[7] = ''
+            if dato[7] == None:
+                dato[7] = ''
+            else:
+                dato[7] = mayus_minus(str(dato[7]))
 
-            hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, estado = estado, nro_de_serie=mayus_minus(str(dato[4])), observaciones = mayus_minus(str(dato[7])))
+            hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, estado = estado, nro_de_serie=mayus_minus(str(dato[4])).upper(), observaciones = dato[7])
             hard.save()
         
     
@@ -235,6 +237,7 @@ def get_info(request):
     return JsonResponse(data, safe=False)
 
 @login_required(login_url='login')
+@admin_only
 def notificaciones(request):
     ctx={'link':'notification'}
 
@@ -245,14 +248,12 @@ def notificaciones(request):
     return render(request, 'main.html', ctx)
 
 @login_required(login_url='login')
+@admin_only
 def accion_notificacion(request):
     id = request.GET.get('id')
     status = request.GET.get('status')
     notificacion = Notificacion.objects.get(id=id)
 
-    '''
-        Eliminar notificaciones que tengan hardware ya eliminado.
-    '''
     
     if (notificacion.tipo == 'CREATE' and status == 'cancel') or (notificacion.tipo == 'DELETE' and status == 'accept'):
         hardware = Hardware.objects.get(id = notificacion.hardware.id)

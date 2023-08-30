@@ -76,7 +76,7 @@ class Hardware(models.Model):
     nro_de_serie = models.CharField(max_length=100, null=False, default='')
     ubicacion = models.ForeignKey(Ubicacion, on_delete=models.CASCADE)
     estado = models.ForeignKey(Estado, on_delete=models.CASCADE)
-    observaciones = models.TextField(max_length=500, default='', blank=True)
+    observaciones = models.TextField(max_length=500, blank=True)
 
     def toJSON(self):
         item = model_to_dict(self)
@@ -99,3 +99,7 @@ class Notificacion(models.Model):
     tipo = models.CharField(max_length=20)
     estado = models.CharField(max_length=50)
     nro_de_serie = models.CharField(max_length=100)
+
+class Asignacion(models.Model):
+    hardware = models.ManyToManyField(Hardware)
+    usuario = models.CharField(max_length=50)
