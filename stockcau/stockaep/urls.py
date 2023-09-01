@@ -14,5 +14,7 @@ urlpatterns = [
     #path('test', views.test, name = 'test'),
     path('get-info', views.get_info, name='get-info'),
     path('notifications', views.notificaciones, name='notifications'),
-    path('action', views.accion_notificacion, name='action')
+    path('action', views.accion_notificacion, name='action'),
+    path('asignar', views.asignacion, name='asignacion'),
+    path('asignaciones', views.asignaciones, name='asignaciones')
 ]

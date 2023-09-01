@@ -109,8 +109,9 @@ class Notificacion(models.Model):
         return item
 
 class Asignacion(models.Model):
-    hardware = models.ManyToManyField(Hardware)
+    hardware = models.ForeignKey(Hardware, on_delete=models.DO_NOTHING)
     usuario = models.CharField(max_length=50)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     def toJSON(self):
         item = model_to_dict(self)

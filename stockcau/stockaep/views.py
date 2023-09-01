@@ -299,3 +299,17 @@ def accion_notificacion(request):
     notificacion.save()
 
     return redirect(reverse('notifications') + f'?item={id}')
+
+def asignacion(request):
+    id = request.GET.get('id')
+    hardware = Hardware.objects.get(id=id)
+    if request.method == 'POST':
+        person = request.POST['person']
+        if len(person) == 0:
+            return redirect('index')
+        Asignacion.objects.create(hardware=hardware, usuario=person)
+        return redirect('index')
+    
+    return redirect('index')
+
+

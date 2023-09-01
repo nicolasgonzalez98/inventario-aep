@@ -15,12 +15,5 @@ class Migration(migrations.Migration):
             name='observaciones',
             field=models.TextField(blank=True, default='', max_length=500),
         ),
-        migrations.CreateModel(
-            name='Asignacion',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('usuario', models.CharField(max_length=50)),
-                ('hardware', models.ManyToManyField(to='stockaep.Hardware')),
-            ],
-        ),
+        
     ]

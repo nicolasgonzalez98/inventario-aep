@@ -50,7 +50,7 @@
                 <td>{{ hardware.nro_de_serie }}</td>
                 <td>{{ hardware.ubicacion }}</td>
                 <td>{{hardware.estado}}</td>
-                <td><button type="button" class="btn btn-success">Asignar</button></td>
+                <td><button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalAsignacion{{hardware.id}}" id="botonAsignacion">Asignar</button></td>
                 <td><a class="btn btn-dark" href="edit/{{hardware.id}}">Editar</a></td>
                 <td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete-{{hardware.id}}">Eliminar</button></td>
             </tr>
@@ -80,7 +80,34 @@
                 </div>
                 </div>
             </div>
+            <!--Modal Asignacion-->
+            <div id="modalAsignacion{{hardware.id}}" aria-labelledby="modalAsignacion{{hardware.id}}" class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Asignacion de Hardware</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <form method="POST" action="asignar?id={{hardware.id}}">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="person" class="form-label">Asignar a</label>
+                                <input type="text" id="person" name="person" class="form-control">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                        <input type="submit" class="btn btn-primary" value="Save changes"></input>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                  </div>
+                </form>
+                </div>
+            </div>
             {% endfor %}
+            
             
         </tbody>
     </table> 
@@ -106,6 +133,7 @@
 <script>
     let nueva_url = new URL(window.location.href)
     let link = document.querySelectorAll('#link-page')
+    let botonAsignacion = document.querySelectorAll('botonAsignacion')
 
     for(let i = 0; i < link.length; i++){
         //Agregar switch y buscar include en Py 
@@ -125,5 +153,12 @@
             
         })
     }
+
+    for(let i = 0; i < botonAsignacion.length; i++){
+        botonAsignacion[i].addEventListener('click', () => {
+        console.log('click')
+    })
+    }
+    
 
 </script>
