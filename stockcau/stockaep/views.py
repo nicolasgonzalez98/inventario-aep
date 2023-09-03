@@ -31,6 +31,10 @@ def mayus_minus(pal):
 def index(request):
     
     page = request.GET.get('page',1)
+    asignacion = request.GET.get('asignacion', False)
+    editar = request.GET.get('editar', False)
+    agregar = request.GET.get('agregar', False)
+    
     
     f = HardwareFilter(request.GET, queryset=Hardware.objects.all())
     
@@ -49,6 +53,14 @@ def index(request):
         'paginator':product_paginator,
         'cant_pags':product_paginator.page_range
     }
+
+    if asignacion == '1':
+        ctx['asignacion'] = True
+    if editar == '1':
+        ctx['editar'] = True
+    if agregar == '1':
+        ctx['agregar'] = True
+    
     
     return render(request, 'main.html', ctx)
 
@@ -129,7 +141,7 @@ def add_inventary(request):
             if(request.user.is_staff == False):
                 Notificacion.objects.create(hardware=hardware, usuario = request.user, tipo = 'CREATE')
             
-            return redirect('/')
+            return redirect(reverse('index')+f'?agregar=1')
     return render(request, 'main.html', ctx)
 
 @login_required(login_url='login')
@@ -238,7 +250,7 @@ def edit(request, id):
             Notificacion.objects.create(hardware=to_edit, usuario = User.objects.get(username = request.user), tipo = 'EDIT', nro_de_serie = nro_serie, estado = estado)
         to_edit.save()
         
-        return redirect('/')
+        return redirect(reverse('index')+f'?editar=1')
     
     return render(request, 'main.html', ctx)
 
@@ -308,8 +320,10 @@ def asignacion(request):
         if len(person) == 0:
             return redirect('index')
         Asignacion.objects.create(hardware=hardware, usuario=person)
-        return redirect('index')
+        return redirect(reverse('index')+f'?asignacion=1')
     
     return redirect('index')
 
 
+def asignaciones(request):
+    return HttpResponse('hola')

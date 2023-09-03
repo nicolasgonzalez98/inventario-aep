@@ -130,10 +130,54 @@
     </nav>
 </div>
 {% endblock %}
+{% if asignacion == True %}
+<script>
+        Swal.fire(
+    'Articulo asignado',
+    'Se asigno el articulo correctamente.',
+    'success'
+    )
+    .then(() => {
+        let url_actual = new URL(window.location.href)
+
+        window.location.href = url_actual.origin
+    })
+
+    
+
+
+</script>
+{% elif editar == True %}
+<script>
+    Swal.fire(
+    'Articulo editado',
+    'Se edito el articulo correctamente.',
+    'success'
+    )
+    .then(() => {
+        let url_actual = new URL(window.location.href)
+
+        window.location.href = url_actual.origin
+    })
+</script>
+{% elif agregar == True %}
+<script>
+    Swal.fire(
+    'Articulo agregado',
+    'Se agrego correctamente al inventario.',
+    'success'
+    )
+    .then(() => {
+        let url_actual = new URL(window.location.href)
+
+        window.location.href = url_actual.origin
+    })
+</script>
+{% endif %}
 <script>
     let nueva_url = new URL(window.location.href)
     let link = document.querySelectorAll('#link-page')
-    let botonAsignacion = document.querySelectorAll('botonAsignacion')
+    
 
     for(let i = 0; i < link.length; i++){
         //Agregar switch y buscar include en Py 
@@ -154,11 +198,7 @@
         })
     }
 
-    for(let i = 0; i < botonAsignacion.length; i++){
-        botonAsignacion[i].addEventListener('click', () => {
-        console.log('click')
-    })
-    }
+    
     
 
 </script>
