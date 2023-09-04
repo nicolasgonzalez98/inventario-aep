@@ -8,7 +8,7 @@
         <ul class="navbar-nav">
           
           <li class="nav-item">
-            <a class="nav-link" href="create">Agregar a inventario</a>
+            <a class="nav-link" href="{% url 'create' %}">Agregar a inventario</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'reload' %}">Recargar inventario</a>
@@ -16,12 +16,12 @@
           <li class="nav-item">
             <a href="" class="nav-link">Asignaciones</a>
           </li>
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a href="" class="nav-link">Estadisticas</a>
-          </li>
+          </li> -->
           {% if request.user.is_staff %}
           <li class="nav-item">
-            <a class="nav-link" href="notifications">Notificaciones</a>
+            <a class="nav-link" href="{% url 'notifications' %}">Notificaciones</a>
           </li>
           {% endif %}
         </ul>

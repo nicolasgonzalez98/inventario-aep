@@ -281,11 +281,23 @@ def get_info(request):
 @admin_only
 def notificaciones(request):
     ctx={'link':'notification'}
+    status = request.GET.get('status', False)
+    print(status)
 
+    if status == 'cancel':
+        ctx['status'] = True
+        ctx['title'] = 'Peticion cancelada'
+        ctx['msg'] = 'Se ha cancelado la petición correctamente.'
+    elif status == 'accept':
+        ctx['status'] = True
+        ctx['title'] = 'Peticion aprobada'
+        ctx['msg'] = 'Se ha aprobado la petición correctamente.'
+    
     notificaciones = Notificacion.objects.filter(realizado = False)
     
     ctx['notificaciones'] = notificaciones
     ctx['cant_notificaciones'] = len(notificaciones)
+    print(ctx)
     return render(request, 'main.html', ctx)
 
 @login_required(login_url='login')
@@ -310,7 +322,7 @@ def accion_notificacion(request):
     notificacion.realizado = True
     notificacion.save()
 
-    return redirect(reverse('notifications') + f'?item={id}')
+    return redirect(reverse('notifications') + f'?status={status}')
 
 def asignacion(request):
     id = request.GET.get('id')

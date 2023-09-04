@@ -60,7 +60,7 @@
                 <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Eliminar articulo</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -130,6 +130,7 @@
     </nav>
 </div>
 {% endblock %}
+<!--Advertencias-->
 {% if asignacion == True %}
 <script>
         Swal.fire(
@@ -174,6 +175,8 @@
     })
 </script>
 {% endif %}
+
+<!--Final de advertencias-->
 <script>
     let nueva_url = new URL(window.location.href)
     let link = document.querySelectorAll('#link-page')

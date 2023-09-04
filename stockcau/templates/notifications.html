@@ -55,10 +55,24 @@
             <a as="button" class="btn btn-danger" href="action?id={{n.id}}&status=cancel">Denegar</a>
             <a as="button" class="btn btn-success" href="action?id={{n.id}}&status=accept">Aprobar</a>
             
-        
+            
         </a>
     
     {% endfor %}
+    {% if status == True %}
+            <script>
+                Swal.fire(
+                '{{title}}',
+                '{{msg}}',
+                'info'
+                )
+                .then(() => {
+                    let url_actual = new URL(window.location.href)
+                    window.location.href = url_actual.origin + url_actual.pathname
+                    
+                })
+            </script>
+    {% endif%}
     </div>
 </div>
 {% endblock %}
