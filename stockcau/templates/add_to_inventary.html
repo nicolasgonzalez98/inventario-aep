@@ -54,7 +54,12 @@
         </div>
       </div>
 
+      {% for msg in messages%}
+                    <h5 class="mb-3 danger">{{msg}}</h5>
+      {% endfor %}
+
       <input class="btn btn-success" type="submit" value="Agregar a inventario" />
+      
       
     </form>
     

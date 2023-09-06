@@ -81,6 +81,7 @@ class Hardware(models.Model):
     def toJSON(self):
         item = model_to_dict(self)
         return item
+    
 
     def __str__(self):
         return f'{self.tipo}'

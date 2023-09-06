@@ -1,5 +1,6 @@
 from django.forms import ModelForm
 from .models import * 
+from django.core.exceptions import ValidationError
 
 class HardwareForm(ModelForm):
     def __init__(self, *args, **kwargs):
@@ -37,6 +38,8 @@ class HardwareForm(ModelForm):
             'rows':"10"
         }
          
+    
+
     class Meta:
         model = Hardware
         fields="__all__"
