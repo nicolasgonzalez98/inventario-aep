@@ -35,7 +35,8 @@ class HardwareForm(ModelForm):
             'id':'observaciones',
             'class':'form-control',
             'style':"resize: none;",
-            'rows':"10"
+            'rows':"10",
+            'required':False
         }
          
     

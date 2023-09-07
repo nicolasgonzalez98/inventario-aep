@@ -122,7 +122,7 @@ def logout(request):
 
 @login_required(login_url='login')
 def add_inventary(request):
-    print(request)
+    
     form_add_inventary = HardwareForm()
     
     ctx = {'link':'create'}
@@ -131,17 +131,32 @@ def add_inventary(request):
     if request.method == 'POST':
         form = HardwareForm(request.POST)
         if form.is_valid():
-            if Hardware.objects.get(nro_de_serie = form.cleaned_data['nro_de_serie']):
+            try:
+                form.cleaned_data['nro_de_serie'] = form.cleaned_data['nro_de_serie'].upper()
+            except:
+                pass
+            if len(form.cleaned_data['nro_de_serie']) > 0 and ('?' not in form.cleaned_data['nro_de_serie']):
+                try:
+                    hard = Hardware.objects.get(nro_de_serie = form.cleaned_data['nro_de_serie'])
+                except:
+                    hard = None
+            else:
+                hard = None
+            
+            if hard != None:
                 messages.info(request, 'Ya hay un hardware en el inventario con el mismo numero de serie.')
                 ctx['form_add_inventary'] = HardwareForm(form.cleaned_data)
             else:
+                print(form.cleaned_data['nro_de_serie'])
+                if len(form.cleaned_data['nro_de_serie']) == 0 or ('?' in form.cleaned_data['nro_de_serie']):
+                    form.cleaned_data['nro_de_serie'] = 'S/D'
                 tipo, create = Tipo.objects.get_or_create(id = request.POST['tipo'])
                 marca, create = Marca.objects.get_or_create(id = request.POST['marca']) 
                 modelo = Modelo.objects.get(id = request.POST['modelo'])
                 ubicacion, create = Ubicacion.objects.get_or_create(id=request.POST['ubicacion'])
                 estado, create = Estado.objects.get_or_create(id = request.POST['estado'])
                 
-                hardware = Hardware.objects.create(tipo = tipo, marca=marca, modelo=modelo,ubicacion=ubicacion, estado = estado, nro_de_serie=request.POST['nro_de_serie'], observaciones = request.POST['observaciones'])
+                hardware = Hardware.objects.create(tipo = tipo, marca=marca, modelo=modelo,ubicacion=ubicacion, estado = estado, nro_de_serie=form.cleaned_data['nro_de_serie'], observaciones = request.POST['observaciones'])
                 
                 if(request.user.is_staff == False):
                     Notificacion.objects.create(hardware=hardware, usuario = request.user, tipo = 'CREATE')
