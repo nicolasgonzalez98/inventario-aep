@@ -241,7 +241,10 @@ def delete(request, id):
 
 @login_required(login_url='login')
 def edit(request, id):
-    to_edit = Hardware.objects.get(id=id)
+    try:
+        to_edit = Hardware.objects.get(id=id)
+    except:
+        return redirect('index')
     ctx = {}
     ctx['to_edit'] = to_edit
     edit_form = HardwareForm(to_edit.toJSON())
