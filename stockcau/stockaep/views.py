@@ -25,11 +25,17 @@ def mayus_minus(pal):
         pal.replace(' ', '')
     return pal.lower().capitalize()
 
+def buscar_repetido(nro_de_serie):
+    try:
+        hard = Hardware.objects.get(nro_de_serie = nro_de_serie)
+    except:
+        hard = None
+    return hard
 # Create your views here.
 
 @login_required(login_url='login')
 def index(request):
-    
+    cant_pags = []
     page = request.GET.get('page',1)
     asignacion = request.GET.get('asignacion', False)
     editar = request.GET.get('editar', False)
@@ -46,12 +52,18 @@ def index(request):
         pagina = product_paginator.page(product_paginator.num_pages)
     except:
         pagina = product_paginator.page(product_paginator.num_pages)
+
+    for i in list(product_paginator.page_range):
+        if i <= int(page) + 5 and i>=int(page)-5:
+            cant_pags.append(i)
+
     ctx = {
         'link':'index',
         'filter':f,
         'pagina': pagina,
         'paginator':product_paginator,
-        'cant_pags':product_paginator.page_range
+        'cant_pags':cant_pags,
+        'num_page':int(page)
     }
 
     if asignacion == '1':
@@ -136,10 +148,7 @@ def add_inventary(request):
             except:
                 pass
             if len(form.cleaned_data['nro_de_serie']) > 0 and ('?' not in form.cleaned_data['nro_de_serie']):
-                try:
-                    hard = Hardware.objects.get(nro_de_serie = form.cleaned_data['nro_de_serie'])
-                except:
-                    hard = None
+                hard = buscar_repetido(form.cleaned_data['nro_de_serie'])
             else:
                 hard = None
             
@@ -254,19 +263,37 @@ def edit(request, id):
     
     if request.method == 'POST':
         
+        if request.POST['nro_de_serie'].upper() != to_edit.nro_de_serie:
+            try:
+                request.POST['nro_de_serie'] = request.POST['nro_de_serie'].upper()
+            except:
+                pass
+            if len(request.POST['nro_de_serie']) > 0 and ('?' not in request.POST['nro_de_serie']):
+                
+                hard = buscar_repetido(request.POST['nro_de_serie'].upper())
+                
+            else:
+                hard = None
+            print(hard)
+            if hard != None:
+                messages.info(request, 'Ya hay un hardware en el inventario con el mismo numero de serie.')
+                ctx['form_add_inventary'] = HardwareForm(request.POST)
+                return render(request, 'main.html', ctx)
+        
         to_edit.tipo  = Tipo.objects.get(id=request.POST['tipo'])
         to_edit.marca = Marca.objects.get(id=request.POST['marca'])
         to_edit.modelo = Modelo.objects.get(id=request.POST['modelo'])
         to_edit.ubicacion = Ubicacion.objects.get(id=request.POST['ubicacion'])
         to_edit.observaciones = request.POST['observaciones']
         if(request.user.is_staff):
-            to_edit.nro_de_serie = request.POST['nro_de_serie']
+
+            to_edit.nro_de_serie = request.POST['nro_de_serie'].upper()
             to_edit.estado = Estado.objects.get(id=request.POST['estado'])
         else:
             nro_serie = ''
             estado = ''
             if to_edit.nro_de_serie != request.POST['nro_de_serie']:
-                nro_serie= request.POST['nro_de_serie']
+                nro_serie= request.POST['nro_de_serie'].upper()
             if to_edit.estado != Estado.objects.get(id=request.POST['estado']):
                 estado= (Estado.objects.get(id=request.POST['estado'])).nombre
     

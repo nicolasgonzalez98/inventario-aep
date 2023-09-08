@@ -119,7 +119,15 @@
             <li class="page-item"><a class="page-link" id="link-page" href="page={{ pagina.previous_page_number }}">Previous</a></li>
             {% endif %}
             {% for i in cant_pags %}
-                <li class="page-item"><a class="page-link" id="link-page" href="page={{i}}">{{i}}</a></li>
+            
+                <li class="page-item 
+                    {% if num_page == i %}
+                    active
+                    {% endif %}
+                "><a class="page-link" id="link-page" href="page={{i}}">
+                    {{i}}
+                </a></li>
+              
             {% endfor %}
             
             {% if pagina.has_next %}
