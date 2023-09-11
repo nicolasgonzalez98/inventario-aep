@@ -17,6 +17,7 @@ from django.db.models import Q
 
 PRODUCTS_PER_PAGE = 25
 
+
 ##Funciones
 
 def mayus_minus(pal):
@@ -264,18 +265,14 @@ def edit(request, id):
     if request.method == 'POST':
         
         if request.POST['nro_de_serie'].upper() != to_edit.nro_de_serie:
-            try:
-                request.POST['nro_de_serie'] = request.POST['nro_de_serie'].upper()
-            except:
-                pass
+            
             if len(request.POST['nro_de_serie']) > 0 and ('?' not in request.POST['nro_de_serie']):
-                
-                hard = buscar_repetido(request.POST['nro_de_serie'].upper())
+                hard = Hardware.objects.filter(nro_de_serie = request.POST['nro_de_serie'].upper())
                 
             else:
-                hard = None
-            print(hard)
-            if hard != None:
+                hard = False
+
+            if hard:
                 messages.info(request, 'Ya hay un hardware en el inventario con el mismo numero de serie.')
                 ctx['form_add_inventary'] = HardwareForm(request.POST)
                 return render(request, 'main.html', ctx)
@@ -388,4 +385,9 @@ def asignacion(request):
 
 
 def asignaciones(request):
-    return HttpResponse('hola')
+    ctx = {'link':'asignaciones'}
+    asignaciones = Asignacion.objects.filter()
+    
+    
+    ctx['asignaciones'] = asignaciones
+    return render(request, 'main.html', ctx)

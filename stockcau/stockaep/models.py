@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.forms import model_to_dict
 from django.contrib.auth.models import Group
+import time
 
 # Create your models here.
 
@@ -117,3 +118,5 @@ class Asignacion(models.Model):
     def toJSON(self):
         item = model_to_dict(self)
         return item
+    
+    

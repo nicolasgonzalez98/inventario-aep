@@ -1,0 +1,43 @@
+{% load static%}
+{% block content %}
+<div class="container p-3">
+    <h4>Asignaciones</h4>
+
+    <div class="container p-3">
+        <!-- Product List code start -->
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    
+                    <th scope="col">Tipo</th>
+                    <th scope="col">Marca</th>
+                    <th scope="col">Nro. de serie</th>
+                    <th scope="col">Modelo</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Usuario asignado</th>
+                    <th scope="col">Ubicacion</th>
+                    <th scope="col">Nota</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">N° de ticket</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in asignaciones %}
+                    <tr>
+                        <td>{{a.hardware.tipo}}</td>
+                        <td>{{a.hardware.marca}}</td>
+                        <td>{{a.hardware.nro_de_serie}}</td>
+                        <td>{{a.hardware.modelo}}</td>
+                        <td>{{a.hardware.estado}}</td>
+                        <td>{{a.usuario}}</td>
+                        <td>{{a.hardware.ubicacion}}</td>
+                        <td></td>
+                        <td>{{a.fecha_creacion}}</td>
+                        <td></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
