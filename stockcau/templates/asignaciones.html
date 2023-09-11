@@ -1,3 +1,4 @@
+
 {% load static%}
 {% block content %}
 <div class="container p-3">
@@ -32,7 +33,7 @@
                         <td>{{a.usuario}}</td>
                         <td>{{a.hardware.ubicacion}}</td>
                         <td></td>
-                        <td>{{a.fecha_creacion}}</td>
+                        <td>{{a.fecha_creacion|date:"d/m/Y"}}</td>
                         <td></td>
                     </tr>
                 {% endfor %}
