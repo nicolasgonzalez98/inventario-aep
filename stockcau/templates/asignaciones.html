@@ -4,7 +4,7 @@
 <div class="container p-3">
     <h4>Asignaciones</h4>
 
-    <div class="container p-3">
+    <div class="container p-3 table-responsive">
         <!-- Product List code start -->
         <table class="table table-hover">
             <thead>
@@ -23,7 +23,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for a in asignaciones %}
+                {% for a in asignaciones reversed%}
                     <tr>
                         <td>{{a.hardware.tipo}}</td>
                         <td>{{a.hardware.marca}}</td>
@@ -32,9 +32,9 @@
                         <td>{{a.hardware.estado}}</td>
                         <td>{{a.usuario}}</td>
                         <td>{{a.hardware.ubicacion}}</td>
-                        <td></td>
+                        <td>{{a.nota}}</td>
                         <td>{{a.fecha_creacion|date:"d/m/Y"}}</td>
-                        <td></td>
+                        <td>{{a.nro_ticket}}</td>
                     </tr>
                 {% endfor %}
             </tbody>

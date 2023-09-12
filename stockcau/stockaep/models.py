@@ -46,7 +46,7 @@ class Marca(models.Model):
 class Modelo(models.Model):
     nombre = models.CharField(max_length=100, null=False, default='S/D')
     marca = models.ForeignKey(Marca, on_delete=models.CASCADE, default=1)
-    
+
     def __str__(self):
         return self.nombre
     
@@ -111,9 +111,11 @@ class Notificacion(models.Model):
         return item
 
 class Asignacion(models.Model):
-    hardware = models.ForeignKey(Hardware, on_delete=models.DO_NOTHING)
+    hardware = models.OneToOneField(Hardware, on_delete=models.DO_NOTHING)
     usuario = models.CharField(max_length=50)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
+    nro_ticket = models.CharField(blank=True, max_length=10)
+    nota = models.TextField(blank=True, max_length=200)
 
     def toJSON(self):
         item = model_to_dict(self)
