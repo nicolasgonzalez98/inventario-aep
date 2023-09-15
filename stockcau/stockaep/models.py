@@ -111,7 +111,7 @@ class Notificacion(models.Model):
         return item
 
 class Asignacion(models.Model):
-    hardware = models.OneToOneField(Hardware, on_delete=models.DO_NOTHING)
+    hardware = models.ForeignKey(Hardware, on_delete=models.DO_NOTHING)
     usuario = models.CharField(max_length=50)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     nro_ticket = models.CharField(blank=True, max_length=10)

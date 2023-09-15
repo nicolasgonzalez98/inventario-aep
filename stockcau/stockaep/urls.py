@@ -16,5 +16,6 @@ urlpatterns = [
     path('notifications', views.notificaciones, name='notifications'),
     path('action', views.accion_notificacion, name='action'),
     path('asignar', views.asignacion, name='asignacion'),
-    path('asignaciones', views.asignaciones, name='asignaciones')
+    path('asignaciones', views.asignaciones, name='asignaciones'),
+    path('importar', views.importar_datos, name = "importar")
 ]

@@ -391,3 +391,8 @@ def asignaciones(request):
     
     ctx['asignaciones'] = asignaciones
     return render(request, 'main.html', ctx)
+
+def importar_datos(request):
+    wb = openpyxl.Workbook("nuevo_excel.xlsx")
+    wb.save('nuevo.xlsx')
+    return redirect('index')

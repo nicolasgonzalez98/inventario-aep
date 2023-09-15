@@ -23,11 +23,17 @@
             </div>
 
             {% for msg in messages%}
-                    <h5 class="mb-3 danger">{{msg}}</h5>
+                <h5 class="mb-3 danger">{{msg}}</h5>
             {% endfor %}
 
-            <input class="btn btn-primary mb-3 btn-success" type="submit" value = 'Ingresar' />
+            <div class="mt-3 mb-3">
+                No tengo usuario... <a href="{% url 'register' %}">registrarme</a>
+            </div>
+
+            <input class="btn btn-primary mb-3 btn-success" type="submit" value="Ingresar" />
         </form>
     </div>
+
+
 </body>
 </html>
