@@ -35,11 +35,12 @@ class HardwareFilter(django_filters.FilterSet):
         widget=forms.Select(attrs={'class': 'form-control'}),
     )
 
-    # estado = django_filters.ModelChoiceFilter(
-    #     queryset = ESTADOS_HARDWARE,
-    #     label="Estado",
-    #     widget=forms.Select(attrs={'class': 'form-control'}),
-    # )
+    estado = django_filters.ModelChoiceFilter(
+        queryset = Estado.objects.all(),
+        empty_label='Cualquier estado',
+        label="Estado",
+        widget=forms.Select(attrs={'class': 'form-control'}),
+    )
 
     class Meta:
         model = Hardware

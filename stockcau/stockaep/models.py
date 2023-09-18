@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.forms import model_to_dict
 from django.contrib.auth.models import Group
-import time
+
 
 # Create your models here.
 
@@ -45,7 +45,9 @@ class Marca(models.Model):
 
 class Modelo(models.Model):
     nombre = models.CharField(max_length=100, null=False, default='S/D')
-    marca = models.ForeignKey(Marca, on_delete=models.CASCADE, default=1)
+
+    class Meta:
+        ordering = ['nombre']
 
     def __str__(self):
         return self.nombre
@@ -54,6 +56,10 @@ class Modelo(models.Model):
 
 class Ubicacion(models.Model):
     nombre = models.CharField(max_length=50)
+
+    class Meta:
+        ordering = ['nombre']
+
     def __str__(self):
         return self.nombre
 
@@ -63,14 +69,23 @@ class Estado(models.Model):
     ('En uso', 'En uso'),
     ('Fuera de Servicio', 'Fuera de Servicio'),
     ('Scrap', 'Scrap'),
-    ('Scrap', 'RMA')
+    ('RMA', 'RMA')
 )
     nombre = models.CharField(choices=estados_hardware, max_length=50)
+
+    class Meta:
+        ordering = ['nombre']
 
     def __str__(self):
         return f'{self.nombre}'
 
 class Hardware(models.Model):
+    origenes = (
+        ('T4', 'T4'),
+        ('CAU', 'CAU'),
+        ('Yenny', 'Yenny')
+    )
+
     tipo = models.ForeignKey(Tipo, on_delete=models.CASCADE)
     marca = models.ForeignKey(Marca, on_delete=models.CASCADE)
     modelo = models.ForeignKey(Modelo, on_delete=models.CASCADE)
@@ -78,6 +93,7 @@ class Hardware(models.Model):
     ubicacion = models.ForeignKey(Ubicacion, on_delete=models.CASCADE)
     estado = models.ForeignKey(Estado, on_delete=models.CASCADE)
     observaciones = models.TextField(max_length=500, blank=True)
+    origen = models.CharField(choices=origenes, max_length=10, default='CAU')
 
     def toJSON(self):
         item = model_to_dict(self)
@@ -111,7 +127,7 @@ class Notificacion(models.Model):
         return item
 
 class Asignacion(models.Model):
-    hardware = models.ForeignKey(Hardware, on_delete=models.DO_NOTHING)
+    hardware = models.ForeignKey(Hardware, on_delete=models.CASCADE)
     usuario = models.CharField(max_length=50)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     nro_ticket = models.CharField(blank=True, max_length=10)
