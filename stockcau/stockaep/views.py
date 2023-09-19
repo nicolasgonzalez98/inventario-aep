@@ -190,9 +190,10 @@ def reload(request):
             data.append(_row)
         
         for dato in data:
+                print(dato)
                 tipo, create = Tipo.objects.get_or_create(name = mayus_minus(str(dato[1])))
                 marca, create = Marca.objects.get_or_create(nombre = mayus_minus(str(dato[2]))) 
-                modelo, create = Modelo.objects.get_or_create(nombre = mayus_minus(str(dato[3])), marca = marca)
+                modelo, create = Modelo.objects.get_or_create(nombre = mayus_minus(str(dato[3])))
                 ubicacion, create = Ubicacion.objects.get_or_create(nombre=mayus_minus(str('Mueble CAU')))
                 estado, create = Estado.objects.get_or_create(nombre = 'Activo')
 
@@ -204,7 +205,7 @@ def reload(request):
                 hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, estado = estado, nro_de_serie=mayus_minus(str(dato[4])).upper(), observaciones = dato[7] + '\n' + str(dato[8]))
                 hard.save()
 
-    df = openpyxl.load_workbook("inventariot4.xlsx")
+    df = openpyxl.load_workbook("INVENTARIO T4.xlsx")
     
     for i in df.sheetnames:
         
