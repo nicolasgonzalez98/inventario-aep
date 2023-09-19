@@ -21,6 +21,8 @@ PRODUCTS_PER_PAGE = 25
 ##Funciones
 
 def mayus_minus(pal):
+    if(pal == ''):
+        return pal
     pal.strip()
     if pal[-1] == ' ':
         pal.replace(' ', '')
@@ -178,10 +180,11 @@ def add_inventary(request):
 @admin_only
 def reload(request):
     df = openpyxl.load_workbook("Mueble Cau.xlsx")
-
+    print('mueble cau')
     
     for i in df.sheetnames:
-        if df[i] == 'Asignaciones':
+        
+        if df[i].title == 'Asignaciones':
             pass
         else:
             dataframe = df[i]
@@ -193,9 +196,10 @@ def reload(request):
                 data.append(_row)
             
             for dato in data:
+                    print(dato)
                     tipo, create = Tipo.objects.get_or_create(name = mayus_minus(str(dato[1])))
                     marca, create = Marca.objects.get_or_create(nombre = mayus_minus(str(dato[2]))) 
-                    modelo, create = Modelo.objects.get_or_create(nombre = mayus_minus(str(dato[3])), marca = marca)
+                    modelo, create = Modelo.objects.get_or_create(nombre = mayus_minus(str(dato[3])))
                     ubicacion, create = Ubicacion.objects.get_or_create(nombre='Mueble CAU')
                     estado, create = Estado.objects.get_or_create(nombre = 'Activo')
 
@@ -207,63 +211,66 @@ def reload(request):
                     hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, estado = estado, nro_de_serie=mayus_minus(str(dato[4])).upper(), observaciones = dato[7] + '\n' + str(dato[8]))
                     hard.save()
 
-    df = openpyxl.load_workbook("INVENTARIO T4.xlsx")
+    # df = openpyxl.load_workbook("INVENTARIO T4.xlsx")
+    # print('inv t4')
+    # for i in df.sheetnames:
+    #     dataframe = df[i]
+    #     data = []
+    #     print('entre', data, dataframe)
+    #     for row in range(1, dataframe.max_row):
+    #         _row=[row]
+    #         for col in dataframe.iter_cols(1,dataframe.max_column):
+    #             _row.append(col[row].value)
+    #         data.append(_row)
+
+    #     for dato in data:
+    #         print(dato)
+    #         tipo, create = Tipo.objects.get_or_create(name = mayus_minus(str(dato[1])))
+    #         marca, create = Marca.objects.get_or_create(nombre = mayus_minus(str(dato[2]))) 
+    #         modelo, create = Modelo.objects.get_or_create(nombre = mayus_minus(str(dato[3])))
+    #         ubicacion, create = Ubicacion.objects.get_or_create(nombre=mayus_minus(str(dato[6])))
+    #         estado, create = Estado.objects.get_or_create(nombre = 'Activo')
+
+    #         if dato[7] == None:
+    #             dato[7] = ''
+    #         else:
+    #             if len(dato) > 8:
+    #                 dato[7] = mayus_minus(str(dato[7]))
+    #             else:
+    #                 dato[7] = mayus_minus(str(dato[7]))
+    #         hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, estado = estado, nro_de_serie=mayus_minus(str(dato[4])).upper(), observaciones = dato[7], origen = "T4")
+    #         hard.save()
     
-    for i in df.sheetnames:
-        
+    # ##
+    # ##
+    # ##YENNY
+    # ##
+    # ##
+    # df = openpyxl.load_workbook("INVENTARIO YENNY (FEBRERO 2023).xlsx")
+    # print('yenny')
+    # dataframe = df.active
+    # data = []
+    # for row in range(1, dataframe.max_row):
+    #     _row=[row]
+    #     for col in dataframe.iter_cols(1,dataframe.max_column):
+    #         _row.append(col[row].value)
+    #     data.append(_row)
 
-        for row in range(1, dataframe.max_row):
-            _row=[row]
-            for col in dataframe.iter_cols(1,dataframe.max_column):
-                _row.append(col[row].value)
-            data.append(_row)
+    # for dato in data:
+    #         print(dato)
+    #         tipo, create = Tipo.objects.get_or_create(name = "Pantalla")
+    #         marca, create = Marca.objects.get_or_create(nombre = mayus_minus(str(dato[1]))) 
+    #         modelo, create = Modelo.objects.get_or_create(nombre = mayus_minus(str(dato[2])))
+    #         ubicacion, create = Ubicacion.objects.get_or_create(nombre=mayus_minus(str(dato[6])))
+    #         estado, create = Estado.objects.get_or_create(nombre = 'Activo')
 
-        for dato in data:
-            tipo, create = Tipo.objects.get_or_create(name = mayus_minus(str(dato[1])))
-            marca, create = Marca.objects.get_or_create(nombre = mayus_minus(str(dato[2]))) 
-            modelo, create = Modelo.objects.get_or_create(nombre = mayus_minus(str(dato[3])), marca = marca)
-            ubicacion, create = Ubicacion.objects.get_or_create(nombre=mayus_minus(str(dato[6])))
-            estado, create = Estado.objects.get_or_create(nombre = 'Activo')
+    #         if dato[7] == None:
+    #             dato[7] = ''
+    #         else:
+    #             dato[7] = mayus_minus(str(dato[7]))
 
-            if dato[7] == None:
-                dato[7] = ''
-            else:
-                if len(dato) > 8:
-                    print(dato[8])
-                    dato[7] = mayus_minus(str(dato[7]))
-                else:
-                    dato[7] = mayus_minus(str(dato[7]))
-            hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, estado = estado, nro_de_serie=mayus_minus(str(dato[4])).upper(), observaciones = dato[7], origen = "T4")
-            hard.save()
-    
-    ##
-    ##
-    ##YENNY
-    ##
-    ##
-    df = openpyxl.load_workbook("INVENTARIO YENNY (FEBRERO 2023).xlsx")
-    dataframe = df.active
-    data = []
-    for row in range(1, dataframe.max_row):
-        _row=[row]
-        for col in dataframe.iter_cols(1,dataframe.max_column):
-            _row.append(col[row].value)
-        data.append(_row)
-
-    for dato in data:
-            tipo, create = Tipo.objects.get_or_create(name = "Pantalla")
-            marca, create = Marca.objects.get_or_create(nombre = mayus_minus(str(dato[1]))) 
-            modelo, create = Modelo.objects.get_or_create(nombre = mayus_minus(str(dato[2])), marca = marca)
-            ubicacion, create = Ubicacion.objects.get_or_create(nombre=mayus_minus(str(dato[6])))
-            estado, create = Estado.objects.get_or_create(nombre = 'Activo')
-
-            if dato[7] == None:
-                dato[7] = ''
-            else:
-                dato[7] = mayus_minus(str(dato[7]))
-
-            hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, estado = estado, nro_de_serie=mayus_minus(str(dato[4])).upper(), observaciones = dato[7] + '\n' + str(dato[3]) + ' Pulgadas', origen = 'Yenny')
-            hard.save()
+    #         hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, estado = estado, nro_de_serie=mayus_minus(str(dato[4])).upper(), observaciones = dato[7], origen = 'Yenny')
+    #         hard.save()
 
 
 
