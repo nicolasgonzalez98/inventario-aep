@@ -4,17 +4,21 @@
     <h3>Tienes {{cant_notificaciones}} notificaciones</h3>
     <div class="list-group">
     {% for n in notificaciones%}
-        <a href="#" class="list-group-item list-group-item-action mb-3
+        <div class="mb-3 
         {% if n.tipo == 'DELETE' %}
-            list-group-item-danger
+        text-bg-danger
+        card
         {% elif n.tipo == 'EDIT'%}
-            list-group-item-warning
+        text-bg-danger
+        card
         {% elif n.tipo == 'CREATE' %}
-            list-group-item-success
-        {% endif %}
-        " aria-current="true">
+        text-bg-danger
+        card
+        {% endif %}"
+        style="max-width: 90%;"
+        >
         
-            <div class="d-flex w-100 justify-content-between">
+            <div class="card-header">
                 {% if n.tipo == 'DELETE' %}
                     <h5 class="mb-1">{{n.usuario.username}} solicitó eliminar un articulo del inventario</h5>
                 {% elif n.tipo == 'EDIT'%}
@@ -24,14 +28,15 @@
                 {% endif %}
                 
             <!-- <small>3 days ago</small> -->
-            </div>
-            {% if n.tipo == 'DELETE' %}
+            </div >
+            <div class="card-body">
+                {% if n.tipo == 'DELETE' %}
                 <p class="mb-1">Se solicita eliminar: </p>
                 <p>Tipo: <b>{{n.hardware.tipo}}</b></p>
                 <p>Marca: <b>{{n.hardware.marca}}</b></p>
                 <p>Modelo: <b>{{n.hardware.modelo}}</b></p>
                 <p>Nro. de serie: <b>{{n.hardware.nro_de_serie}}</b></p>
-            {% elif n.tipo == 'EDIT'%}
+                {% elif n.tipo == 'EDIT'%}
                 <p class="mb-1">Se solicita modificar el siguiente articulo: </p>
                 <p>Tipo: <b>{{n.hardware.tipo}}</b></p>
                 <p>Marca: <b>{{n.hardware.marca}}</b></p>
@@ -44,19 +49,20 @@
                 {% if n.estado %}
                 <p><b>Cambiar estado</b>: <b>{{n.hardware.estado}}</b> → <b>{{n.estado}}</b></p>
                 {% endif %}
-            {% elif n.tipo == 'CREATE' %}
-            <p class="mb-1">Se solicita crear: </p>
-            <p>Tipo: <b>{{n.hardware.tipo}}</b></p>
-            <p>Marca: <b>{{n.hardware.marca}}</b></p>
-            <p>Modelo: <b>{{n.hardware.modelo}}</b></p>
-            <p>Nro. de serie: <b>{{n.hardware.nro_de_serie}}</b></p>
-            {% endif %}
+                {% elif n.tipo == 'CREATE' %}
+                <p class="mb-1">Se solicita crear: </p>
+                <p>Tipo: <b>{{n.hardware.tipo}}</b></p>
+                <p>Marca: <b>{{n.hardware.marca}}</b></p>
+                <p>Modelo: <b>{{n.hardware.modelo}}</b></p>
+                <p>Nro. de serie: <b>{{n.hardware.nro_de_serie}}</b></p>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <a as="button" class="btn btn-danger" href="action?id={{n.id}}&status=cancel">Denegar</a>
+                <a as="button" class="btn btn-success" href="action?id={{n.id}}&status=accept">Aprobar</a>
+            </div>
             
-            <a as="button" class="btn btn-danger" href="action?id={{n.id}}&status=cancel">Denegar</a>
-            <a as="button" class="btn btn-success" href="action?id={{n.id}}&status=accept">Aprobar</a>
-            
-            
-        </a>
+        </div>
     
     {% endfor %}
     {% if status == True %}

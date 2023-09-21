@@ -116,7 +116,7 @@
     <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
             {% if pagina.has_previous %}
-            <li class="page-item"><a class="page-link" id="link-page" href="page={{ pagina.previous_page_number }}">Previous</a></li>
+            <li class="page-item"><a class="page-link" id="link-page" href="page={{ pagina.previous_page_number }}">Anterior</a></li>
             {% endif %}
             {% for i in cant_pags %}
             
@@ -131,7 +131,7 @@
             {% endfor %}
             
             {% if pagina.has_next %}
-            <li class="page-item"><a class="page-link" id="link-page" href="page={{ pagina.next_page_number }}">Next</a></li>
+            <li class="page-item"><a class="page-link" id="link-page" href="page={{ pagina.next_page_number }}">Siguiente</a></li>
             {% endif %}
         
         </ul>
