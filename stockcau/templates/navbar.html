@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<nav class="navbar navbar-expand-lg bg-body-tertiary" style="background-color: #e3f2fd;" data-bs-theme="dark">
     <div class="container-fluid">
       <a class="navbar-brand" href="/">Inventario CAU</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -21,7 +21,13 @@
           </li> -->
           {% if request.user.is_staff %}
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'notifications' %}">Notificaciones</a> 
+            <a class="nav-link" href="{% url 'notifications' %}">
+              {% if cant_notificaciones > 0%}
+              Notificaciones <span class="badge text-bg-secondary">{{cant_notificaciones}}
+              {% else %}
+              Notificaciones
+              {% endif %}
+            </a> 
           </li>
           {% endif %}
         </ul>

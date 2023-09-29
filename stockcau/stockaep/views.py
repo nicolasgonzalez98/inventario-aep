@@ -43,6 +43,8 @@ def index(request):
     asignacion = request.GET.get('asignacion', False)
     editar = request.GET.get('editar', False)
     agregar = request.GET.get('agregar', False)
+    notificaciones = Notificacion.objects.filter(realizado = True)
+    notificaciones = len(notificaciones)
     
     
     f = HardwareFilter(request.GET, queryset=Hardware.objects.all())
@@ -66,7 +68,8 @@ def index(request):
         'pagina': pagina,
         'paginator':product_paginator,
         'cant_pags':cant_pags,
-        'num_page':int(page)
+        'num_page':int(page),
+        'cant_notificaciones':notificaciones
     }
 
     if asignacion == '1':
