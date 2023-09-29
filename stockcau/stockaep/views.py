@@ -182,40 +182,102 @@ def add_inventary(request):
 @login_required(login_url='login')
 @admin_only
 def reload(request):
-    df = openpyxl.load_workbook("INVENTARIO_YENNY.xlsx")
-    print('yenny')
-    dataframe = df.active
-    data = []
-    for row in range(1, dataframe.max_row):
-        _row=[row]
-        for col in dataframe.iter_cols(1,dataframe.max_column):
-            _row.append(col[row].value)
-        data.append(_row)
+    # df = openpyxl.load_workbook("INVENTARIO_YENNY.xlsx")
+    # print('yenny')
+    # dataframe = df.active
+    # data = []
+    # for row in range(1, dataframe.max_row):
+    #     _row=[row]
+    #     for col in dataframe.iter_cols(1,dataframe.max_column):
+    #         _row.append(col[row].value)
+    #     data.append(_row)
 
-    for dato in data:
-            print(dato)
-            tipo, create = Tipo.objects.get_or_create(name = "Pantalla")
-            marca, create = Marca.objects.get_or_create(nombre = mayus_minus(str(dato[1]))) 
-            modelo, create = Modelo.objects.get_or_create(nombre = mayus_minus(str(dato[2])))
-            ubicacion, create = Ubicacion.objects.get_or_create(nombre=mayus_minus(str(dato[6])))
-            estado, create = Estado.objects.get_or_create(nombre = 'Activo')
+    # for dato in data:
+    #         print(dato)
+    #         tipo, create = Tipo.objects.get_or_create(name = "Pantalla")
+    #         marca, create = Marca.objects.get_or_create(nombre = mayus_minus(str(dato[1]))) 
+    #         modelo, create = Modelo.objects.get_or_create(nombre = mayus_minus(str(dato[2])))
+    #         ubicacion, create = Ubicacion.objects.get_or_create(nombre=mayus_minus(str(dato[6])))
+    #         estado, create = Estado.objects.get_or_create(nombre = 'Activo')
 
-            if dato[7] == None:
-                dato[7] = ''
-            else:
-                dato[7] = mayus_minus(str(dato[7]))
+    #         if dato[7] == None:
+    #             dato[7] = ''
+    #         else:
+    #             dato[7] = mayus_minus(str(dato[7]))
 
-            hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, estado = estado, nro_de_serie=mayus_minus(str(dato[4])).upper(), observaciones = dato[7], origen = 'Yenny')
-            hard.save()
+    #         hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, estado = estado, nro_de_serie=mayus_minus(str(dato[4])).upper(), observaciones = dato[7], origen = 'Yenny')
+    #         hard.save()
+
+    # df = openpyxl.load_workbook("Mueble Cau.xlsx")
+    # print('mueble cau')
+    
+    # for i in df.sheetnames:
+        
+    #     if df[i].title == 'Asignaciones':
+    #         pass
+    #     else:
+    #         dataframe = df[i]
+    #         data = []
+    #         for row in range(1, dataframe.max_row):
+    #             _row=[row]
+    #             for col in dataframe.iter_cols(1,dataframe.max_column):
+    #                 _row.append(col[row].value)
+    #             data.append(_row)
+            
+    #         for dato in data:
+    #                 print(dato)
+    #                 tipo, create = Tipo.objects.get_or_create(name = mayus_minus(str(dato[1])))
+    #                 marca, create = Marca.objects.get_or_create(nombre = mayus_minus(str(dato[2]))) 
+    #                 modelo, create = Modelo.objects.get_or_create(nombre = mayus_minus(str(dato[3])))
+    #                 ubicacion, create = Ubicacion.objects.get_or_create(nombre='Mueble CAU')
+    #                 estado, create = Estado.objects.get_or_create(nombre = 'Activo')
+
+    #                 if dato[7] == None:
+    #                     dato[7] = ''
+    #                 else:
+    #                     dato[7] = mayus_minus(str(dato[7]))
+    #                 if dato[4] == None:
+    #                     dato[4] = 'S/D'
+
+    #                 hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, estado = estado, nro_de_serie=mayus_minus(str(dato[4])).upper(), observaciones = dato[7] + '\n' + str(dato[8]))
+    #                 hard.save()
+
+    # df = openpyxl.load_workbook("INVENTARIO T4.xlsx")
+    
+    # for i in df.sheetnames:
+    #     if df[i].title == 'Scrap':
+    #         pass
+    #     else:
+    #         dataframe = df[i]
+    #         data = []
+    #         print('entre', data, dataframe)
+    #         for row in range(1, dataframe.max_row):
+    #             _row=[row]
+    #             for col in dataframe.iter_cols(1,dataframe.max_column):
+    #                 _row.append(col[row].value)
+    #             data.append(_row)
+
+    #         for dato in data:
+    #             print(dato)
+    #             tipo, create = Tipo.objects.get_or_create(name = mayus_minus(str(dato[1])))
+    #             marca, create = Marca.objects.get_or_create(nombre = mayus_minus(str(dato[2]))) 
+    #             modelo, create = Modelo.objects.get_or_create(nombre = mayus_minus(str(dato[3])))
+    #             ubicacion, create = Ubicacion.objects.get_or_create(nombre=mayus_minus(str(dato[6])))
+    #             estado, create = Estado.objects.get_or_create(nombre = 'Activo')
+
+    #             if dato[7] == None:
+    #                 dato[7] = ''
+    #             else:
+    #                 if len(dato) > 8:
+    #                     dato[7] = mayus_minus(str(dato[7]))
+    #                 else:
+    #                     dato[7] = mayus_minus(str(dato[7]))
+    #             hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, estado = estado, nro_de_serie=mayus_minus(str(dato[4])).upper(), observaciones = dato[7], origen = "T4")
+    #             hard.save()
 
     df = openpyxl.load_workbook("Mueble Cau.xlsx")
-    print('mueble cau')
-    
     for i in df.sheetnames:
-        
         if df[i].title == 'Asignaciones':
-            pass
-        else:
             dataframe = df[i]
             data = []
             for row in range(1, dataframe.max_row):
@@ -225,55 +287,21 @@ def reload(request):
                 data.append(_row)
             
             for dato in data:
+                
+                try:
+                    if (dato[3] == None):
+                        hard = Hardware.objects.get(nro_de_serie = dato[4])
+                        
+                    else:
+                        hard = Hardware.objects.get(nro_de_serie = dato[3])
+                        
+                    if dato[11] == None:
+                            dato[11] = ""
+                    if dato[9] == None:
+                            dato[9] = ""
+                    asignacion = Asignacion.objects.create(hardware = hard, usuario = dato[7], fecha_creacion = dato[10], nro_ticket = dato[11], nota = dato[9])
+                except:
                     print(dato)
-                    tipo, create = Tipo.objects.get_or_create(name = mayus_minus(str(dato[1])))
-                    marca, create = Marca.objects.get_or_create(nombre = mayus_minus(str(dato[2]))) 
-                    modelo, create = Modelo.objects.get_or_create(nombre = mayus_minus(str(dato[3])))
-                    ubicacion, create = Ubicacion.objects.get_or_create(nombre='Mueble CAU')
-                    estado, create = Estado.objects.get_or_create(nombre = 'Activo')
-
-                    if dato[7] == None:
-                        dato[7] = ''
-                    else:
-                        dato[7] = mayus_minus(str(dato[7]))
-                    if dato[4] == None:
-                        dato[4] = 'S/D'
-
-                    hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, estado = estado, nro_de_serie=mayus_minus(str(dato[4])).upper(), observaciones = dato[7] + '\n' + str(dato[8]))
-                    hard.save()
-
-    df = openpyxl.load_workbook("INVENTARIO T4.xlsx")
-    print('inv t4')
-    for i in df.sheetnames:
-        if df[i].title == 'Scrap':
-            pass
-        else:
-            dataframe = df[i]
-            data = []
-            print('entre', data, dataframe)
-            for row in range(1, dataframe.max_row):
-                _row=[row]
-                for col in dataframe.iter_cols(1,dataframe.max_column):
-                    _row.append(col[row].value)
-                data.append(_row)
-
-            for dato in data:
-                print(dato)
-                tipo, create = Tipo.objects.get_or_create(name = mayus_minus(str(dato[1])))
-                marca, create = Marca.objects.get_or_create(nombre = mayus_minus(str(dato[2]))) 
-                modelo, create = Modelo.objects.get_or_create(nombre = mayus_minus(str(dato[3])))
-                ubicacion, create = Ubicacion.objects.get_or_create(nombre=mayus_minus(str(dato[6])))
-                estado, create = Estado.objects.get_or_create(nombre = 'Activo')
-
-                if dato[7] == None:
-                    dato[7] = ''
-                else:
-                    if len(dato) > 8:
-                        dato[7] = mayus_minus(str(dato[7]))
-                    else:
-                        dato[7] = mayus_minus(str(dato[7]))
-                hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, estado = estado, nro_de_serie=mayus_minus(str(dato[4])).upper(), observaciones = dato[7], origen = "T4")
-                hard.save()
 
     return redirect('index')
 
