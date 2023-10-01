@@ -27,6 +27,8 @@
         {% include 'notifications.html' %}
     {% elif link == 'asignaciones'%}
         {% include 'asignaciones.html' %}
+    {% elif link == "admin_users" %}
+        {% include "admin_users.html" %}
     {% endif %}
     <!-- Functions -->
     <script src="{% static 'js/functions.js' %}"></script>

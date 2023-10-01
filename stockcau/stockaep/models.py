@@ -25,6 +25,9 @@ class Tecnico(models.Model):
     email = models.CharField(max_length=100)
     id_user = models.IntegerField()
 
+    def __str__(self) -> str:
+        return self.name + self.apellido
+
 class Tipo(models.Model):
     name = models.CharField(max_length=50, unique=True)
 

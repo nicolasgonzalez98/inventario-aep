@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
+from django.forms.models import model_to_dict
 from django.contrib.auth.models import User, auth
 from .models import *
 from .forms import *
@@ -14,11 +15,21 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 import json
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import Q
+import rarfile
+import os
+import subprocess
 
 PRODUCTS_PER_PAGE = 25
 
 
 ##Funciones
+
+def comprimir_archivos_rar(archivos, nombre_archivo_rar):
+    # Crea el comando para comprimir los archivos en un archivo RAR
+    comando = ['rar', 'a', nombre_archivo_rar] + archivos
+    
+    # Ejecuta el comando utilizando subprocess
+    subprocess.run(comando)
 
 def mayus_minus(pal):
     if(pal == ''):
@@ -439,6 +450,7 @@ def accion_notificacion(request):
 
     return redirect(reverse('notifications') + f'?status={status}')
 
+@login_required(login_url='login')
 def asignacion(request):
     id = request.GET.get('id')
     hardware = Hardware.objects.get(id=id)
@@ -451,7 +463,7 @@ def asignacion(request):
     
     return redirect('index')
 
-
+@login_required(login_url='login')
 def asignaciones(request):
     ctx = {'link':'asignaciones'}
     asignaciones = Asignacion.objects.filter()
@@ -460,8 +472,58 @@ def asignaciones(request):
     ctx['asignaciones'] = asignaciones
     return render(request, 'main.html', ctx)
 
+@login_required(login_url='login')
+@admin_only
+def administrar_users(request):
+    usuarios = Tecnico.objects.all()
+    ctx = {}
+    ctx["users"] = usuarios
+    ctx["link"] = "admin_users"
+    return render(request, "main.html", ctx)
+
+@login_required(login_url='login')
+@admin_only
+def to_admin(request):
+    id = request.GET.get('id')
+    status = request.GET.get("status")
+
+    if status == "1":
+        group=Group.objects.get(name='admin')
+        user = User.objects.get(id=id)
+        user.is_superuser = True
+        user.is_staff = True
+        user.groups.add(group)
+        group=Group.objects.get(name='user')
+        user.groups.remove(group)
+    elif status == "0":
+        group=Group.objects.get(name='user')
+        user = User.objects.get(id=id)
+        user.is_superuser = False
+        user.is_staff = False
+        user.groups.add(group)
+        group=Group.objects.get(name='admin')
+        user.groups.remove(group)
+    user.save()
+
+    return redirect("admin_users")
+
+def to_active(request):
+    id = request.GET.get('id')
+    status = request.GET.get("status")
+
+    if status == "1":
+        user = User.objects.get(id=id)
+        user.is_active = True
+    elif status == "0":
+        user = User.objects.get(id=id)
+        user.is_active = False
+    user.save()
+    return redirect("admin_users")
+
 def importar_datos(request):
+    archivos = ["INVENTARIO T4.xlsx"]
     wb = openpyxl.Workbook("nuevo_excel_t4.xlsx")
 
-    wb.save('nuevo.xlsx')
+    wb.save(archivos[0])
+    comprimir_archivos_rar(archivos, "nuevo_rar")
     return redirect('index')

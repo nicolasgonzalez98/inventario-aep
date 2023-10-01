@@ -17,5 +17,8 @@ urlpatterns = [
     path('action', views.accion_notificacion, name='action'),
     path('asignar', views.asignacion, name='asignacion'),
     path('asignaciones', views.asignaciones, name='asignaciones'),
-    path('importar', views.importar_datos, name = "importar")
+    ##path('importar', views.importar_datos, name = "importar")
+    path("administrar_usuario", views.administrar_users, name="admin_users"),
+    path("to_admin", views.to_admin, name="to_admin"),
+    path("to_active", views.to_active, name="to_active")
 ]
