@@ -54,3 +54,24 @@ class HardwareFilter(django_filters.FilterSet):
                  },
              }
         }
+
+class AsignacionFilter(django_filters.FilterSet):
+    
+
+    class Meta:
+        model = Asignacion
+        fields = {
+            'usuario':  ['icontains'], 
+            'nro_ticket': ["exact"], 
+            'hardware__nro_de_serie': ['icontains']
+        }
+
+        filter_overrides = {
+            models.CharField: {
+                'filter_class': django_filters.CharFilter,
+                'extra': lambda f: {
+                    'lookup_expr': 'icontains',
+                    'widget': forms.TextInput(attrs={'class': 'form-control'})
+                },
+            }
+        }

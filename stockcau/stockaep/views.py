@@ -9,9 +9,9 @@ import openpyxl
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from .filters import HardwareFilter
-from django_filters.views import FilterView
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from .filters import HardwareFilter, AsignacionFilter
+
+from django.core.paginator import EmptyPage, Paginator
 import json
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import Q
@@ -467,9 +467,11 @@ def asignacion(request):
 def asignaciones(request):
     ctx = {'link':'asignaciones'}
     asignaciones = Asignacion.objects.filter()
+    f = AsignacionFilter(request.GET, queryset=Asignacion.objects.all())
+    asignaciones_filtradas = f.qs
+    ctx['filter'] = f
     
-    
-    ctx['asignaciones'] = asignaciones
+    ctx['asignaciones'] = asignaciones_filtradas
     return render(request, 'main.html', ctx)
 
 @login_required(login_url='login')

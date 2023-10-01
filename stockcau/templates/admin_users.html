@@ -19,7 +19,6 @@
                     <tr>
                         <td>{{a.nombre}} {{a.apellido}}</td>
                         <td>{{a.user.username}}</td>
-                        <td>{{a.user.is_superuser}}</td>
                         <td>
                             {% if a.user.is_superuser %}
                             <a class="btn btn-danger" href="to_admin?id={{a.user.id}}&status=0">Sacar Admin</a>
