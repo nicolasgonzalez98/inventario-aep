@@ -173,7 +173,7 @@ def add_inventary(request):
                 messages.info(request, 'Ya hay un hardware en el inventario con el mismo numero de serie.')
                 ctx['form_add_inventary'] = HardwareForm(form.cleaned_data)
             else:
-                print(form.cleaned_data['nro_de_serie'])
+                
                 if len(form.cleaned_data['nro_de_serie']) == 0 or ('?' in form.cleaned_data['nro_de_serie']):
                     form.cleaned_data['nro_de_serie'] = 'S/D'
                 tipo, create = Tipo.objects.get_or_create(id = request.POST['tipo'])
@@ -182,7 +182,8 @@ def add_inventary(request):
                 ubicacion, create = Ubicacion.objects.get_or_create(id=request.POST['ubicacion'])
                 estado, create = Estado.objects.get_or_create(id = request.POST['estado'])
                 
-                hardware = Hardware.objects.create(tipo = tipo, marca=marca, modelo=modelo,ubicacion=ubicacion, estado = estado, nro_de_serie=form.cleaned_data['nro_de_serie'], observaciones = request.POST['observaciones'])
+
+                hardware = Hardware.objects.create(tipo = tipo, marca=marca, modelo=modelo,ubicacion=ubicacion, estado = estado, nro_de_serie=form.cleaned_data['nro_de_serie'], observaciones = request.POST['observaciones'], origen = request.POST['origen'])
                 
                 if(request.user.is_staff == False):
                     Notificacion.objects.create(hardware=hardware, usuario = request.user, tipo = 'CREATE')
@@ -361,6 +362,7 @@ def edit(request, id):
         to_edit.modelo = Modelo.objects.get(id=request.POST['modelo'])
         to_edit.ubicacion = Ubicacion.objects.get(id=request.POST['ubicacion'])
         to_edit.observaciones = request.POST['observaciones']
+        to_edit.origen = request.POST['origen']
         if(request.user.is_staff):
 
             to_edit.nro_de_serie = request.POST['nro_de_serie'].upper()
@@ -533,3 +535,17 @@ def importar_datos(request):
     wb.save(archivos[0])
     comprimir_archivos_rar(archivos, "nuevo_rar")
     return redirect('index')
+
+@login_required
+def cambio_contraseña(request):
+    if request.method == 'POST':
+        form = CambioContraseñaForm(request.POST)
+        if form.is_valid():
+            nueva_contraseña = form.cleaned_data['nueva_contraseña']
+            request.user.set_password(nueva_contraseña)
+            request.user.save()
+            return redirect('index')  # Redirigir a la página de perfil o cualquier otra página después de cambiar la contraseña
+    else:
+        form = CambioContraseñaForm()
+
+    return render(request, 'main.html', {'form': form, "link":"cambio_contraseña"})
