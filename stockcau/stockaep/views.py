@@ -544,7 +544,11 @@ def cambio_contraseña(request):
             nueva_contraseña = form.cleaned_data['nueva_contraseña']
             request.user.set_password(nueva_contraseña)
             request.user.save()
-            return redirect('index')  # Redirigir a la página de perfil o cualquier otra página después de cambiar la contraseña
+            return redirect('index')
+        else:
+            form.add_error(None, "Las contraseñas no coinciden.")
+            
+            return render(request, 'main.html', {'form': form, "link":"cambio_contraseña"})# Redirigir a la página de perfil o cualquier otra página después de cambiar la contraseña
     else:
         form = CambioContraseñaForm()
 
