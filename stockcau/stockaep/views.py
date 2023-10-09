@@ -237,7 +237,7 @@ def reload(request):
                 data.append(_row)
             
             for dato in data:
-                    print(dato)
+                    
                     tipo, create = Tipo.objects.get_or_create(name = mayus_minus(str(dato[1])))
                     marca, create = Marca.objects.get_or_create(nombre = mayus_minus(str(dato[2]))) 
                     modelo, create = Modelo.objects.get_or_create(nombre = mayus_minus(str(dato[3])))
