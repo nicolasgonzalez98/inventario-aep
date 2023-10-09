@@ -1,4 +1,5 @@
 from django.forms import ModelForm
+from django import forms
 from .models import * 
 from django.core.exceptions import ValidationError
 
@@ -31,6 +32,13 @@ class HardwareForm(ModelForm):
             'id':'estado',
             'class':'form-control',
         }
+         self.fields['origen'].widget.attrs = {
+             'id':'origen',
+            'class':'form-control',
+            'style':"resize: none;",
+            'rows':"10",
+            'required':False
+         }
          self.fields['observaciones'].widget.attrs = {
             'id':'observaciones',
             'class':'form-control',
@@ -38,6 +46,7 @@ class HardwareForm(ModelForm):
             'rows':"10",
             'required':False
         }
+         
          
     
 
@@ -76,6 +85,13 @@ class HardwareEditForm(ModelForm):
             'id':'estado',
             'class':'form-control',
         }
+         self.fields['origen'].widget.attrs = {
+             'id':'origen',
+            'class':'form-control',
+            'style':"resize: none;",
+            'rows':"10",
+            'required':False
+         }
          self.fields['observaciones'].widget.attrs = {
             'id':'observaciones',
             'class':'form-control',
@@ -87,3 +103,17 @@ class HardwareEditForm(ModelForm):
     class Meta:
         model = Hardware
         fields="__all__"
+
+
+class CambioContraseñaForm(forms.Form):
+    nueva_contraseña = forms.CharField(widget=forms.PasswordInput)
+    confirmar_contraseña = forms.CharField(widget=forms.PasswordInput)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        nueva_contraseña = cleaned_data.get('nueva_contraseña')
+        confirmar_contraseña = cleaned_data.get('confirmar_contraseña')
+
+        if nueva_contraseña and confirmar_contraseña and nueva_contraseña != confirmar_contraseña:
+            raise forms.ValidationError("Las contraseñas no coinciden.")
+        return cleaned_data

@@ -8,13 +8,7 @@ from django.contrib.auth.models import Group
 
 ##Opciones
 
-ESTADOS_HARDWARE = (
-    ('1', 'Activo'),
-    ('2', 'En uso'),
-    ('3', 'Fuera de Servicio'),
-    ('4', 'Scrap'),
-    ('5', 'RMA')
-)
+
 
 User = get_user_model()
 
@@ -26,7 +20,7 @@ class Tecnico(models.Model):
     id_user = models.IntegerField()
 
     def __str__(self) -> str:
-        return self.name + self.apellido
+        return self.nombre+ ' ' + self.apellido
 
 class Tipo(models.Model):
     name = models.CharField(max_length=50, unique=True)
@@ -68,6 +62,7 @@ class Ubicacion(models.Model):
 
 class Estado(models.Model):
     estados_hardware = (
+    ("Nuevo", "Nuevo"),
     ('Activo', 'Activo'),
     ('En uso', 'En uso'),
     ('Fuera de Servicio', 'Fuera de Servicio'),
