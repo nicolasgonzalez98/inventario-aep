@@ -533,15 +533,40 @@ def importar_datos(request):
     tipos_computadoras = Tipo.objects.filter(name__in=["Pc", "Notebook", "Nuc", "All in one"])
     monitor = Tipo.objects.get(name="Monitor")
     tipos_perifericos = Tipo.objects.filter(name__in=["Teclado", "Mouse"])
+    tipos_memorias = Tipo.objects.filter(name__in=["Disco", "Disco rigido", "Disco solido", "Memoria"])
+    pantallas = Tipo.objects.filter(name__in=["Pantallas", "Pantalla"])
+    periferico = Tipo.objects.get(name = "Periferico")
+    tipo_pc = Tipo.objects.filter(name__in=["Pc escritorio", "Notebook"])
     
     hojas = ["Celulares CAU", "Equipos CAU", "Monitores CAU", "Perifericos CAU", "Memorias CAU", "Pantallas T4","Monitores T4","Perifericos T4", "Computadoras T4","Yenny","Asignaciones"]
+    
+    ##CAU
     celulares_cau = Hardware.objects.filter(origen= 'CAU', tipo = celular).values('id', 'tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'ubicacion__nombre', 'estado__nombre', 'observaciones', 'origen')
     equipos_cau = Hardware.objects.filter(origen= 'CAU', tipo__in = tipos_computadoras).values('id', 'tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'ubicacion__nombre', 'estado__nombre', 'observaciones', 'origen')
     monitores_cau = Hardware.objects.filter(origen= 'CAU', tipo = monitor).values('id', 'tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'ubicacion__nombre', 'estado__nombre', 'observaciones', 'origen')
     perifericos_cau = Hardware.objects.filter(origen= 'CAU', tipo__in = tipos_perifericos).values('id', 'tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'ubicacion__nombre', 'estado__nombre', 'observaciones', 'origen') 
+    memorias_cau = Hardware.objects.filter(origen= 'CAU', tipo__in = tipos_memorias).values('id', 'tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'ubicacion__nombre', 'estado__nombre', 'observaciones', 'origen')
+    
+    ##Yenny
+    yenny = Hardware.objects.filter(origen="Yenny").values('id', 'tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'ubicacion__nombre', 'estado__nombre', 'observaciones', 'origen')
+    ##T4
+    pantallas_t4 = Hardware.objects.filter(origen='T4', tipo__in = pantallas).values('id', 'tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'ubicacion__nombre', 'estado__nombre', 'observaciones', 'origen')
+    monitores_t4 = Hardware.objects.filter(origen= 'T4', tipo = monitor).values('id', 'tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'ubicacion__nombre', 'estado__nombre', 'observaciones', 'origen')
+    perifericos_t4 = Hardware.objects.filter(origen = "T4", tipo = periferico).values('id', 'tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'ubicacion__nombre', 'estado__nombre', 'observaciones', 'origen')
+    computadoras_t4 = Hardware.objects.filter(origen = "T4", tipo__in = tipo_pc).values('id', 'tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'ubicacion__nombre', 'estado__nombre', 'observaciones', 'origen')
+    
+    
     
     wb = openpyxl.Workbook("nuevo_inventario.xlsx")
-    # wb.create_sheet("Hoja")
+    
+    for h in hojas:
+        wb.create_sheet(h)
+        hoja = wb[h]
+        wb.active = hoja
+        hoja = wb.active
+
+        
+
     wb.save("nuevo_inventario.xlsx")
     
     return redirect('index')
