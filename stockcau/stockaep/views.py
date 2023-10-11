@@ -554,18 +554,28 @@ def importar_datos(request):
     monitores_t4 = Hardware.objects.filter(origen= 'T4', tipo = monitor).values('id', 'tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'ubicacion__nombre', 'estado__nombre', 'observaciones', 'origen')
     perifericos_t4 = Hardware.objects.filter(origen = "T4", tipo = periferico).values('id', 'tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'ubicacion__nombre', 'estado__nombre', 'observaciones', 'origen')
     computadoras_t4 = Hardware.objects.filter(origen = "T4", tipo__in = tipo_pc).values('id', 'tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'ubicacion__nombre', 'estado__nombre', 'observaciones', 'origen')
-    
-    
+    ##Asignaciones
+    asignaciones = Hardware.objects.all().values()
+    datos = [celulares_cau, equipos_cau, monitores_cau, perifericos_cau, memorias_cau, pantallas_t4, monitores_t4, perifericos_t4, computadoras_t4,yenny, []]
     
     wb = openpyxl.Workbook("nuevo_inventario.xlsx")
     
-    for h in hojas:
-        wb.create_sheet(h)
-        hoja = wb[h]
+    for i in range(len(hojas)):
+        wb.create_sheet(hojas[i])
+        hoja = wb[hojas[i]]
         wb.active = hoja
         hoja = wb.active
-
+        if hoja.title in ["Celulares CAU"]:
+            hoja.append(("Tipo", "Marca", "Modelo", "IMEI", "Estado", "Ubicación",	"Observaciones", "Nota" ))
+        elif hoja.title in ["Equipos CAU", "Monitores CAU", "Perifericos CAU", "Memorias CAU"]:
+            hoja.append(("Tipo", "Marca", "Modelo", "Service Tag", "Estado", "Ubicación","Observaciones", "Nota" ))
+        elif hoja.title in ["Pantallas T4","Monitores T4","Perifericos T4", "Computadoras T4","Yenny"]:
+            hoja.append(("Tipo", "Marca", "Modelo", "Serial", "Estado", "Ubicación","Observaciones", "Nota" ))
         
+        for dato in datos[i]:
+            print(tuple(dato.values()))
+            hoja.append(tuple(dato.values()))
+                
 
     wb.save("nuevo_inventario.xlsx")
     
