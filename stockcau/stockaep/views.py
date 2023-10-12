@@ -556,7 +556,7 @@ def importar_datos(request):
     computadoras_t4 = Hardware.objects.filter(origen = "T4", tipo__in = tipo_pc).values('tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'estado__nombre','ubicacion__nombre','observaciones', 'origen')
     ##Asignaciones
     asignaciones = Hardware.objects.all().values()
-    datos = [celulares_cau, equipos_cau, monitores_cau, perifericos_cau, memorias_cau, pantallas_t4, monitores_t4, perifericos_t4, computadoras_t4,yenny, []]
+    datos = [celulares_cau, equipos_cau, monitores_cau, perifericos_cau, memorias_cau, pantallas_t4, monitores_t4, perifericos_t4, computadoras_t4,yenny, asignaciones]
     
     wb = openpyxl.Workbook("nuevo_inventario.xlsx")
     
@@ -571,10 +571,13 @@ def importar_datos(request):
             hoja.append(("Tipo", "Marca", "Modelo", "Service Tag", "Estado", "Ubicación","Observaciones", "Nota" ))
         elif hoja.title in ["Pantallas T4","Monitores T4","Perifericos T4", "Computadoras T4","Yenny"]:
             hoja.append(("Tipo", "Marca", "Modelo", "Serial", "Estado", "Ubicación","Observaciones", "Nota" ))
-        
+        elif hoja.title in ["Asignaciones"]:
+            hoja.append(("Producto","Marca","Service Tag / IMEI", "Modelo",	"Estado","Usuario",	"Ubicación","Nota","Fecha",	"N° Ticket"))
         for dato in datos[i]:
-            
-            hoja.append(tuple(dato.values()))
+            fila_limpia = tuple(str(valor).replace("None", "") if "None" in str(valor) else valor for valor in dato.values())
+            print(dato.values())
+            print(fila_limpia)
+            hoja.append(fila_limpia)
                 
 
     wb.save("nuevo_inventario.xlsx")
