@@ -541,19 +541,19 @@ def importar_datos(request):
     hojas = ["Celulares CAU", "Equipos CAU", "Monitores CAU", "Perifericos CAU", "Memorias CAU", "Pantallas T4","Monitores T4","Perifericos T4", "Computadoras T4","Yenny","Asignaciones"]
     
     ##CAU
-    celulares_cau = Hardware.objects.filter(origen= 'CAU', tipo = celular).values('id', 'tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'ubicacion__nombre', 'estado__nombre', 'observaciones', 'origen')
-    equipos_cau = Hardware.objects.filter(origen= 'CAU', tipo__in = tipos_computadoras).values('id', 'tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'ubicacion__nombre', 'estado__nombre', 'observaciones', 'origen')
-    monitores_cau = Hardware.objects.filter(origen= 'CAU', tipo = monitor).values('id', 'tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'ubicacion__nombre', 'estado__nombre', 'observaciones', 'origen')
-    perifericos_cau = Hardware.objects.filter(origen= 'CAU', tipo__in = tipos_perifericos).values('id', 'tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'ubicacion__nombre', 'estado__nombre', 'observaciones', 'origen') 
-    memorias_cau = Hardware.objects.filter(origen= 'CAU', tipo__in = tipos_memorias).values('id', 'tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'ubicacion__nombre', 'estado__nombre', 'observaciones', 'origen')
+    celulares_cau = Hardware.objects.filter(origen= 'CAU', tipo = celular).values('tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'estado__nombre', 'ubicacion__nombre', 'observaciones', 'origen')
+    equipos_cau = Hardware.objects.filter(origen= 'CAU', tipo__in = tipos_computadoras).values('tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'estado__nombre', 'ubicacion__nombre', 'observaciones', 'origen')
+    monitores_cau = Hardware.objects.filter(origen= 'CAU', tipo = monitor).values('tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'estado__nombre', 'ubicacion__nombre', 'observaciones', 'origen')
+    perifericos_cau = Hardware.objects.filter(origen= 'CAU', tipo__in = tipos_perifericos).values('tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'estado__nombre', 'ubicacion__nombre', 'observaciones', 'origen') 
+    memorias_cau = Hardware.objects.filter(origen= 'CAU', tipo__in = tipos_memorias).values('tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'estado__nombre', 'ubicacion__nombre', 'observaciones', 'origen')
     
     ##Yenny
-    yenny = Hardware.objects.filter(origen="Yenny").values('id', 'tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'ubicacion__nombre', 'estado__nombre', 'observaciones', 'origen')
+    yenny = Hardware.objects.filter(origen="Yenny").values('tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'estado__nombre', 'ubicacion__nombre', 'observaciones', 'origen')
     ##T4
-    pantallas_t4 = Hardware.objects.filter(origen='T4', tipo__in = pantallas).values('id', 'tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'ubicacion__nombre', 'estado__nombre', 'observaciones', 'origen')
-    monitores_t4 = Hardware.objects.filter(origen= 'T4', tipo = monitor).values('id', 'tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'ubicacion__nombre', 'estado__nombre', 'observaciones', 'origen')
-    perifericos_t4 = Hardware.objects.filter(origen = "T4", tipo = periferico).values('id', 'tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'ubicacion__nombre', 'estado__nombre', 'observaciones', 'origen')
-    computadoras_t4 = Hardware.objects.filter(origen = "T4", tipo__in = tipo_pc).values('id', 'tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'ubicacion__nombre', 'estado__nombre', 'observaciones', 'origen')
+    pantallas_t4 = Hardware.objects.filter(origen='T4', tipo__in = pantallas).values('tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'estado__nombre', 'ubicacion__nombre', 'observaciones', 'origen')
+    monitores_t4 = Hardware.objects.filter(origen= 'T4', tipo = monitor).values('tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'estado__nombre', 'ubicacion__nombre', 'observaciones', 'origen')
+    perifericos_t4 = Hardware.objects.filter(origen = "T4", tipo = periferico).values('tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'estado__nombre', 'ubicacion__nombre', 'observaciones', 'origen')
+    computadoras_t4 = Hardware.objects.filter(origen = "T4", tipo__in = tipo_pc).values('tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'estado__nombre','ubicacion__nombre','observaciones', 'origen')
     ##Asignaciones
     asignaciones = Hardware.objects.all().values()
     datos = [celulares_cau, equipos_cau, monitores_cau, perifericos_cau, memorias_cau, pantallas_t4, monitores_t4, perifericos_t4, computadoras_t4,yenny, []]
@@ -573,7 +573,7 @@ def importar_datos(request):
             hoja.append(("Tipo", "Marca", "Modelo", "Serial", "Estado", "Ubicación","Observaciones", "Nota" ))
         
         for dato in datos[i]:
-            print(tuple(dato.values()))
+            
             hoja.append(tuple(dato.values()))
                 
 
