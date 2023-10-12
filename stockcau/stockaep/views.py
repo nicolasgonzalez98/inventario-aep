@@ -555,7 +555,7 @@ def importar_datos(request):
     perifericos_t4 = Hardware.objects.filter(origen = "T4", tipo = periferico).values('tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'estado__nombre', 'ubicacion__nombre', 'observaciones', 'origen')
     computadoras_t4 = Hardware.objects.filter(origen = "T4", tipo__in = tipo_pc).values('tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'estado__nombre','ubicacion__nombre','observaciones', 'origen')
     ##Asignaciones
-    asignaciones = Hardware.objects.all().values()
+    asignaciones = Hardware.objects.all().values("hardware__tipo__name", 'hardware__marca__nombre', 'hardware__nro_de_serie', 'hardware__modelo__nombre', 'hardware__estado__nombre', 'usuario', 'nota','fecha_creacion', 'nro_ticket')
     datos = [celulares_cau, equipos_cau, monitores_cau, perifericos_cau, memorias_cau, pantallas_t4, monitores_t4, perifericos_t4, computadoras_t4,yenny, asignaciones]
     
     wb = openpyxl.Workbook("nuevo_inventario.xlsx")
