@@ -92,6 +92,7 @@ class Hardware(models.Model):
     estado = models.ForeignKey(Estado, on_delete=models.CASCADE)
     observaciones = models.TextField(max_length=500, blank=True)
     origen = models.CharField(choices=origenes, max_length=10, default='CAU')
+    nota = models.TextField(max_length=500, blank=True)
 
     def toJSON(self):
         item = model_to_dict(self)
@@ -134,5 +135,7 @@ class Asignacion(models.Model):
     def toJSON(self):
         item = model_to_dict(self)
         return item
+    
+    
     
     

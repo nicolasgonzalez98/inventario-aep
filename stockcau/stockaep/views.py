@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
-from django.forms.models import model_to_dict
 from django.contrib.auth.models import User, auth
 from .models import *
 from .forms import *
@@ -10,13 +9,12 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from .filters import HardwareFilter, AsignacionFilter
+from django.db.models import F
+import os
+
+
 
 from django.core.paginator import EmptyPage, Paginator
-import json
-from django.core.serializers.json import DjangoJSONEncoder
-from django.db.models import Q
-import rarfile
-import os
 import subprocess
 
 PRODUCTS_PER_PAGE = 25
@@ -183,7 +181,7 @@ def add_inventary(request):
                 estado, create = Estado.objects.get_or_create(id = request.POST['estado'])
                 
 
-                hardware = Hardware.objects.create(tipo = tipo, marca=marca, modelo=modelo,ubicacion=ubicacion, estado = estado, nro_de_serie=form.cleaned_data['nro_de_serie'], observaciones = request.POST['observaciones'], origen = request.POST['origen'])
+                hardware = Hardware.objects.create(tipo = tipo, marca=marca, modelo=modelo,ubicacion=ubicacion, estado = estado, nro_de_serie=form.cleaned_data['nro_de_serie'], observaciones = request.POST['observaciones'], origen = request.POST['origen'], nota = request.POST['nota'])
                 
                 if(request.user.is_staff == False):
                     Notificacion.objects.create(hardware=hardware, usuario = request.user, tipo = 'CREATE')
@@ -250,8 +248,11 @@ def reload(request):
                         dato[7] = mayus_minus(str(dato[7]))
                     if dato[4] == None:
                         dato[4] = 'S/D'
+                    
+                    if dato[8] == None:
+                        dato[8] = ""
 
-                    hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, estado = estado, nro_de_serie=mayus_minus(str(dato[4])).upper(), observaciones = dato[7] + '\n' + str(dato[8]))
+                    hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, estado = estado, nro_de_serie=mayus_minus(str(dato[4])).upper(), observaciones = dato[7], nota=str(dato[8]))
                     hard.save()
 
     df = openpyxl.load_workbook("inventariot4.xlsx")
@@ -284,7 +285,10 @@ def reload(request):
                         dato[7] = mayus_minus(str(dato[7]))
                     else:
                         dato[7] = mayus_minus(str(dato[7]))
-                hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, estado = estado, nro_de_serie=mayus_minus(str(dato[4])).upper(), observaciones = dato[7], origen = "T4")
+
+                if dato[8] == None:
+                    dato[8] = ""
+                hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, estado = estado, nro_de_serie=mayus_minus(str(dato[4])).upper(), observaciones = dato[7], origen = "T4", nota=str(dato[8]))
                 hard.save()
 
     df = openpyxl.load_workbook("Mueble Cau.xlsx")
@@ -363,6 +367,7 @@ def edit(request, id):
         to_edit.ubicacion = Ubicacion.objects.get(id=request.POST['ubicacion'])
         to_edit.observaciones = request.POST['observaciones']
         to_edit.origen = request.POST['origen']
+        to_edit.nota = request.POST["nota"]
         if(request.user.is_staff):
 
             to_edit.nro_de_serie = request.POST['nro_de_serie'].upper()
@@ -382,24 +387,8 @@ def edit(request, id):
     
     return render(request, 'main.html', ctx)
 
-# def test(request):
-#     page = request.GET.get('page',1)
-    
-#     f = HardwareFilter(request.GET, queryset=Hardware.objects.all())
-#     product_paginator = Paginator(list(f.qs), PRODUCTS_PER_PAGE)
-#     try:
-#         pagina = product_paginator.page(page)
-#     except EmptyPage:
-#         print('hola')
-#         pagina = product_paginator.page('1')
-#     ctx = {
-#         'link':'test',
-#         'filter':f,
-#         'pagina': pagina,
-#         'paginator':product_paginator
-#     }
-#     return render(request, 'main.html', ctx)
-
+@admin_only
+@login_required(login_url='login')
 def get_info(request):
     data = list(Hardware.objects.values())
     
@@ -515,6 +504,8 @@ def to_admin(request):
 
     return redirect("admin_users")
 
+@login_required(login_url='login')
+@admin_only
 def to_active(request):
     id = request.GET.get('id')
     status = request.GET.get("status")
@@ -528,63 +519,57 @@ def to_active(request):
     user.save()
     return redirect("admin_users")
 
+@login_required(login_url='login')
 def importar_datos(request):
-    celular = Tipo.objects.get(name="Celular")
-    tipos_computadoras = Tipo.objects.filter(name__in=["Pc", "Notebook", "Nuc", "All in one"])
-    monitor = Tipo.objects.get(name="Monitor")
-    tipos_perifericos = Tipo.objects.filter(name__in=["Teclado", "Mouse"])
-    tipos_memorias = Tipo.objects.filter(name__in=["Disco", "Disco rigido", "Disco solido", "Memoria"])
-    pantallas = Tipo.objects.filter(name__in=["Pantallas", "Pantalla"])
-    periferico = Tipo.objects.get(name = "Periferico")
-    tipo_pc = Tipo.objects.filter(name__in=["Pc escritorio", "Notebook"])
+    hojas = ["Stock","Asignaciones"]
+    separador = os.path.sep
+    dir_actual = os.path.dirname(os.path.abspath(__file__))
+    direc = separador.join(dir_actual.split(separador)[:-1])
+    directorio_static = os.path.join(direc, 'static')
+    nombre_archivo = "nuevo_inventario.xlsx"
     
-    hojas = ["Celulares CAU", "Equipos CAU", "Monitores CAU", "Perifericos CAU", "Memorias CAU", "Pantallas T4","Monitores T4","Perifericos T4", "Computadoras T4","Yenny","Asignaciones"]
+    asignaciones = Asignacion.objects.annotate(
+                    fecha_creacion_sin_tz=F('fecha_creacion')
+                ).values("hardware__tipo__name", "hardware__marca__nombre","hardware__nro_de_serie","hardware__modelo__nombre","hardware__estado__nombre",'usuario',"hardware__ubicacion__nombre", 'nota','fecha_creacion_sin_tz', 'nro_ticket')
+    for asignacion in asignaciones:
+        asignacion['fecha_creacion_sin_tz'] = asignacion['fecha_creacion_sin_tz'].replace(tzinfo=None)
+    hardware = Hardware.objects.all().values('tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'estado__nombre', 'ubicacion__nombre', 'observaciones', 'origen')
     
-    ##CAU
-    celulares_cau = Hardware.objects.filter(origen= 'CAU', tipo = celular).values('tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'estado__nombre', 'ubicacion__nombre', 'observaciones', 'origen')
-    equipos_cau = Hardware.objects.filter(origen= 'CAU', tipo__in = tipos_computadoras).values('tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'estado__nombre', 'ubicacion__nombre', 'observaciones', 'origen')
-    monitores_cau = Hardware.objects.filter(origen= 'CAU', tipo = monitor).values('tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'estado__nombre', 'ubicacion__nombre', 'observaciones', 'origen')
-    perifericos_cau = Hardware.objects.filter(origen= 'CAU', tipo__in = tipos_perifericos).values('tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'estado__nombre', 'ubicacion__nombre', 'observaciones', 'origen') 
-    memorias_cau = Hardware.objects.filter(origen= 'CAU', tipo__in = tipos_memorias).values('tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'estado__nombre', 'ubicacion__nombre', 'observaciones', 'origen')
-    
-    ##Yenny
-    yenny = Hardware.objects.filter(origen="Yenny").values('tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'estado__nombre', 'ubicacion__nombre', 'observaciones', 'origen')
-    ##T4
-    pantallas_t4 = Hardware.objects.filter(origen='T4', tipo__in = pantallas).values('tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'estado__nombre', 'ubicacion__nombre', 'observaciones', 'origen')
-    monitores_t4 = Hardware.objects.filter(origen= 'T4', tipo = monitor).values('tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'estado__nombre', 'ubicacion__nombre', 'observaciones', 'origen')
-    perifericos_t4 = Hardware.objects.filter(origen = "T4", tipo = periferico).values('tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'estado__nombre', 'ubicacion__nombre', 'observaciones', 'origen')
-    computadoras_t4 = Hardware.objects.filter(origen = "T4", tipo__in = tipo_pc).values('tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'estado__nombre','ubicacion__nombre','observaciones', 'origen')
-    ##Asignaciones
-    asignaciones = Hardware.objects.all().values("hardware__tipo__name", 'hardware__marca__nombre', 'hardware__nro_de_serie', 'hardware__modelo__nombre', 'hardware__estado__nombre', 'usuario', 'nota','fecha_creacion', 'nro_ticket')
-    datos = [celulares_cau, equipos_cau, monitores_cau, perifericos_cau, memorias_cau, pantallas_t4, monitores_t4, perifericos_t4, computadoras_t4,yenny, asignaciones]
-    
-    wb = openpyxl.Workbook("nuevo_inventario.xlsx")
+    wb = openpyxl.Workbook(nombre_archivo)
     
     for i in range(len(hojas)):
         wb.create_sheet(hojas[i])
         hoja = wb[hojas[i]]
         wb.active = hoja
         hoja = wb.active
-        if hoja.title in ["Celulares CAU"]:
-            hoja.append(("Tipo", "Marca", "Modelo", "IMEI", "Estado", "Ubicación",	"Observaciones", "Nota" ))
-        elif hoja.title in ["Equipos CAU", "Monitores CAU", "Perifericos CAU", "Memorias CAU"]:
-            hoja.append(("Tipo", "Marca", "Modelo", "Service Tag", "Estado", "Ubicación","Observaciones", "Nota" ))
-        elif hoja.title in ["Pantallas T4","Monitores T4","Perifericos T4", "Computadoras T4","Yenny"]:
-            hoja.append(("Tipo", "Marca", "Modelo", "Serial", "Estado", "Ubicación","Observaciones", "Nota" ))
-        elif hoja.title in ["Asignaciones"]:
-            hoja.append(("Producto","Marca","Service Tag / IMEI", "Modelo",	"Estado","Usuario",	"Ubicación","Nota","Fecha",	"N° Ticket"))
-        for dato in datos[i]:
-            fila_limpia = tuple(str(valor).replace("None", "") if "None" in str(valor) else valor for valor in dato.values())
-            print(dato.values())
-            print(fila_limpia)
-            hoja.append(fila_limpia)
+        if hoja.title in ["Asignaciones"]:
+            hoja.append(("Producto","Marca","Service Tag / IMEI", "Modelo",	"Estado","Usuario",	"Ubicación","Nota","N° Ticket",	"Fecha"))
+            for h in asignaciones:
+                fila_limpia = tuple(str(valor).replace("None", "") if "None" in str(valor) else valor for valor in h.values())
                 
-
-    wb.save("nuevo_inventario.xlsx")
+                hoja.append(fila_limpia)
+        else: 
+            hoja.append(("Tipo", "Marca", "Modelo", "Service Tag/IMEI", "Estado", "Ubicación","Observaciones", "Nota" ))
+            for h in hardware:
+                fila_limpia = tuple(str(valor).replace("None", "") if "None" in str(valor) else valor for valor in h.values())
+                hoja.append(fila_limpia)
+        
+        
+                
+    # Ruta completa del archivo Excel en la carpeta 'static'
+    ruta_archivo_excel = os.path.join(directorio_static, nombre_archivo)
+    # Guardar el libro en la carpeta 'static'
+    wb.save(ruta_archivo_excel)
+    # Cerrar el libro después de guardarlo
+    wb.close()
     
-    return redirect('index')
+    return render(request, 'main.html', {"link":"realizar_informe"})
 
-@login_required
+@login_required(login_url='login')
+def realizar_informes(request):
+    return render(request, 'main.html', {"link":"realizar_informe"})
+
+@login_required(login_url='login')
 def cambio_contraseña(request):
     if request.method == 'POST':
         form = CambioContraseñaForm(request.POST)

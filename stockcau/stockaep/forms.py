@@ -39,6 +39,13 @@ class HardwareForm(ModelForm):
             'rows':"10",
             'required':False
          }
+         self.fields['nota'].widget.attrs = {
+            'id':'nota',
+            'class':'form-control',
+            'style':"resize: none;",
+            'rows':"3",
+            'required':False
+        }
          self.fields['observaciones'].widget.attrs = {
             'id':'observaciones',
             'class':'form-control',
@@ -92,6 +99,13 @@ class HardwareEditForm(ModelForm):
             'rows':"10",
             'required':False
          }
+         self.fields['nota'].widget.attrs = {
+            'id':'nota',
+            'class':'form-control',
+            'style':"resize: none;",
+            'rows':"3",
+            'required':False
+        }
          self.fields['observaciones'].widget.attrs = {
             'id':'observaciones',
             'class':'form-control',
@@ -99,6 +113,7 @@ class HardwareEditForm(ModelForm):
             'rows':"10",
             'required':False
         }
+        
          
     class Meta:
         model = Hardware
