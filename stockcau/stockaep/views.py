@@ -249,10 +249,13 @@ def reload(request):
                     if dato[4] == None:
                         dato[4] = 'S/D'
                     
-                    if dato[8] == None:
-                        dato[8] = ""
+                    try:
+                        if dato[8] == None:
+                            dato[8] = ""
 
-                    hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, estado = estado, nro_de_serie=mayus_minus(str(dato[4])).upper(), observaciones = dato[7], nota=str(dato[8]))
+                        hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, estado = estado, nro_de_serie=mayus_minus(str(dato[4])).upper(), observaciones = dato[7], nota=str(dato[8]))
+                    except:
+                        hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, estado = estado, nro_de_serie=mayus_minus(str(dato[4])).upper(), observaciones = dato[7])
                     hard.save()
 
     df = openpyxl.load_workbook("inventariot4.xlsx")
@@ -263,7 +266,7 @@ def reload(request):
         else:
             dataframe = df[i]
             data = []
-            print('entre', data, dataframe)
+            
             for row in range(1, dataframe.max_row):
                 _row=[row]
                 for col in dataframe.iter_cols(1,dataframe.max_column):
@@ -285,10 +288,12 @@ def reload(request):
                         dato[7] = mayus_minus(str(dato[7]))
                     else:
                         dato[7] = mayus_minus(str(dato[7]))
-
-                if dato[8] == None:
-                    dato[8] = ""
-                hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, estado = estado, nro_de_serie=mayus_minus(str(dato[4])).upper(), observaciones = dato[7], origen = "T4", nota=str(dato[8]))
+                try:
+                    if dato[8] == None:
+                        dato[8] = ""
+                    hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, estado = estado, nro_de_serie=mayus_minus(str(dato[4])).upper(), observaciones = dato[7], origen = "T4", nota=str(dato[8]))
+                except:
+                    hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, estado = estado, nro_de_serie=mayus_minus(str(dato[4])).upper(), observaciones = dato[7], origen = "T4")
                 hard.save()
 
     df = openpyxl.load_workbook("Mueble Cau.xlsx")
