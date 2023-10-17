@@ -128,7 +128,7 @@ class Notificacion(models.Model):
 class Asignacion(models.Model):
     hardware = models.ForeignKey(Hardware, on_delete=models.CASCADE)
     usuario = models.CharField(max_length=50)
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_creacion = models.DateField(auto_now_add=True)
     nro_ticket = models.CharField(blank=True, max_length=10)
     nota = models.TextField(blank=True, max_length=200)
 
@@ -136,6 +136,7 @@ class Asignacion(models.Model):
         item = model_to_dict(self)
         return item
     
-    
+    class Meta:
+        ordering = ['fecha_creacion']
     
     
