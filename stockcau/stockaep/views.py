@@ -321,7 +321,7 @@ def reload(request):
                             dato[11] = ""
                     if dato[9] == None:
                             dato[9] = ""
-                    print(dato[10].date())
+                    
                     
                     asignacion = Asignacion.objects.create(hardware = hard, usuario = dato[7], fecha_creacion = dato[10].date(), nro_ticket = dato[11], nota = dato[9])
                     asignacion.save()
