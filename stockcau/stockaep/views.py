@@ -11,7 +11,7 @@ from django.http import JsonResponse
 from .filters import HardwareFilter, AsignacionFilter
 from django.db.models import F
 import os
-from datetime import datetime
+
 
 
 
@@ -537,12 +537,10 @@ def importar_datos(request):
     directorio_static = os.path.join(direc, 'static')
     nombre_archivo = "nuevo_inventario.xlsx"
     
-    asignaciones = Asignacion.objects.annotate(
-                    fecha_creacion_sin_tz=F('fecha_creacion')
-                ).values("hardware__tipo__name", "hardware__marca__nombre","hardware__nro_de_serie","hardware__modelo__nombre","hardware__estado__nombre",'usuario',"hardware__ubicacion__nombre", 'nota','fecha_creacion_sin_tz', 'nro_ticket')
-    for asignacion in asignaciones:
-        asignacion['fecha_creacion_sin_tz'] = asignacion['fecha_creacion_sin_tz'].replace(tzinfo=None)
-    hardware = Hardware.objects.all().values('tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'estado__nombre', 'ubicacion__nombre', 'observaciones', 'origen')
+    asignaciones = Asignacion.objects.all().values("hardware__tipo__name", "hardware__marca__nombre","hardware__nro_de_serie","hardware__modelo__nombre","hardware__estado__nombre",'usuario',"hardware__ubicacion__nombre", 'nota','fecha_creacion', 'nro_ticket')
+    # for asignacion in asignaciones:
+    #     asignacion['fecha_creacion_sin_tz'] = asignacion['fecha_creacion_sin_tz'].replace(tzinfo=None)
+    hardware = Hardware.objects.all().values('tipo__name', 'marca__nombre', 'modelo__nombre', 'nro_de_serie', 'estado__nombre', 'ubicacion__nombre', 'observaciones', 'nota')
     
     wb = openpyxl.Workbook(nombre_archivo)
     
