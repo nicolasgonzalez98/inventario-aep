@@ -35,6 +35,8 @@
             <th scope="col">Nro. de serie</th>
             <th scope="col">Ubicacion</th>
             <th scope="col">Estado</th>
+            <th scope="col">Nota</th>
+            <th scope="col">Observaciones</th>
             <th scope="col">Asignar</th>
             <th scope="col">Editar</th>
             <th scope="col">Eliminar</th>
@@ -50,6 +52,8 @@
                 <td>{{ hardware.nro_de_serie }}</td>
                 <td>{{ hardware.ubicacion }}</td>
                 <td>{{hardware.estado}}</td>
+                <td>{{hardware.nota}}</td>
+                <td>{{hardware.observaciones}}</td>
                 <td><button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalAsignacion{{hardware.id}}" id="botonAsignacion">Asignar</button></td>
                 <td><a class="btn btn-dark" href="edit/{{hardware.id}}">Editar</a></td>
                 <td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete-{{hardware.id}}">Eliminar</button></td>

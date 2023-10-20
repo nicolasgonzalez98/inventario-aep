@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.forms import model_to_dict
 from django.contrib.auth.models import Group
+from django.utils import timezone
 
 
 # Create your models here.
@@ -128,7 +129,7 @@ class Notificacion(models.Model):
 class Asignacion(models.Model):
     hardware = models.ForeignKey(Hardware, on_delete=models.CASCADE)
     usuario = models.CharField(max_length=50)
-    fecha_creacion = models.DateField(auto_now_add=True)
+    fecha_creacion = models.DateField(default=timezone.now)
     nro_ticket = models.CharField(blank=True, max_length=10)
     nota = models.TextField(blank=True, max_length=200)
 
@@ -138,5 +139,8 @@ class Asignacion(models.Model):
     
     class Meta:
         ordering = ['fecha_creacion']
+
+    def __str__(self):
+        return f'{self.usuario} - {self.fecha_creacion}'
     
     
