@@ -25,9 +25,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-_b@e^!97x-w20!#1diffuo^69fqz0zhp)f39_l86c6hhvq3s_d'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "stockcau.pythonanywhere.com"
+    ]
 
 
 # Application definition
@@ -131,7 +133,7 @@ DATE_INPUT_FORMATS = [
 
 
 USE_L10N = True
-# SHORT_DATE_FORMAT = 'm/d/Y'   
+# SHORT_DATE_FORMAT = 'm/d/Y'
 # DATE_FORMAT = "d/m/Y"
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
