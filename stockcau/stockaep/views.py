@@ -572,6 +572,28 @@ def importar_datos(request):
     
     return render(request, 'main.html', {"link":"realizar_informe"})
 
+def cargar_nuevo(request):
+    df = openpyxl.load_workbook("iNVENTARIO DEPOSITO Pantallas Parking Rio.xlsx")
+    
+    dataframe = df.active
+    data = []
+    for row in range(1, dataframe.max_row):
+        _row=[row]
+        for col in dataframe.iter_cols(1,dataframe.max_column):
+            _row.append(col[row].value)
+        data.append(_row)
+    
+
+    for dato in data:
+            
+            if dato[2] != None:
+                if buscar_repetido(dato[3]) != None:
+                    if(buscar_repetido(dato[3]).ubicacion != "Parking Rio"):
+                        print(buscar_repetido(dato[3]).ubicacion)
+            
+    return redirect("index")
+
+
 @login_required(login_url='login')
 def realizar_informes(request):
     return render(request, 'main.html', {"link":"realizar_informe"})
