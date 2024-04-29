@@ -573,7 +573,7 @@ def importar_datos(request):
     return render(request, 'main.html', {"link":"realizar_informe"})
 
 def cargar_nuevo(request):
-    df = openpyxl.load_workbook("iNVENTARIO DEPOSITO Pantallas Parking Rio.xlsx")
+    df = openpyxl.load_workbook("Stock SCRAP Feb 2024.xlsx")
     
     dataframe = df.active
     data = []
@@ -587,9 +587,34 @@ def cargar_nuevo(request):
     for dato in data:
             
             if dato[2] != None:
-                if buscar_repetido(dato[3]) != None:
-                    if(buscar_repetido(dato[3]).ubicacion != "Parking Rio"):
-                        print(buscar_repetido(dato[3]).ubicacion)
+                if buscar_repetido(dato[4]) != None:
+                    print(dato[4] + " esta")
+                    hard = buscar_repetido(dato[4])
+                    if hard.estado != "Scrap":
+                        estado, create = Estado.objects.get_or_create(nombre = "Scrap")
+                        hard.estado = estado
+                        hard.save()
+                # else:
+                #     print(dato[4])
+                #     # tipo, create = Tipo.objects.get_or_create(name = mayus_minus(str(dato[1])))
+                #     # marca, create = Marca.objects.get_or_create(nombre = mayus_minus(str(dato[2]))) 
+                #     # modelo, create = Modelo.objects.get_or_create(nombre = mayus_minus(str(dato[3])))
+                #     # ubicacion, create = Ubicacion.objects.get_or_create(nombre=str(dato[6]))
+                #     # estado, create = Estado.objects.get_or_create(nombre = str(dato[5]))
+                #     # if dato[7] == None:
+                #     #     dato[7] = ''
+                #     # else:
+                #     #     dato[7] = mayus_minus(str(dato[7]))
+                #     # if dato[4] == None:
+                #     #     dato[4] = 'S/D'
+                #     # if dato[8] == None:
+                #     #         dato[8] = ""
+                #     # try:
+                        
+                #     #     hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, estado = estado, nro_de_serie=mayus_minus(str(dato[4])).upper(), observaciones = dato[7], nota=str(dato[8]))
+                #     # except:
+                #     #     hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, estado = estado, nro_de_serie=mayus_minus(str(dato[4])).upper(), observaciones = dato[7])
+                #     # hard.save()
             
     return redirect("index")
 
