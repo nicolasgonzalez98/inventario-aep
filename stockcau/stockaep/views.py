@@ -573,7 +573,7 @@ def importar_datos(request):
     return render(request, 'main.html', {"link":"realizar_informe"})
 
 def cargar_nuevo(request):
-    df = openpyxl.load_workbook("Stock SCRAP Feb 2024.xlsx")
+    df = openpyxl.load_workbook("inventario t4 nuevo.xlsx")
     
     dataframe = df.active
     data = []
@@ -585,15 +585,18 @@ def cargar_nuevo(request):
     
 
     for dato in data:
+            print(dato)
             
-            if dato[2] != None:
-                if buscar_repetido(dato[4]) != None:
-                    print(dato[4] + " esta")
-                    hard = buscar_repetido(dato[4])
-                    if hard.estado != "Scrap":
-                        estado, create = Estado.objects.get_or_create(nombre = "Scrap")
-                        hard.estado = estado
-                        hard.save()
+            
+            print(dato[4] + " esta")
+            
+            tipo, create = Tipo.objects.get_or_create(name = mayus_minus(str(dato[1])))
+            marca, create = Marca.objects.get_or_create(nombre = mayus_minus(str(dato[2]))) 
+            modelo, create = Modelo.objects.get_or_create(nombre = mayus_minus(str(dato[3])))
+            ubicacion, create = Ubicacion.objects.get_or_create(nombre="T4")
+            estado, create = Estado.objects.get_or_create(nombre = "Activo")
+            hard = Hardware.objects.create(tipo=tipo, marca=marca, modelo=modelo, ubicacion=ubicacion, estado = estado, nro_de_serie=mayus_minus(str(dato[4])).upper(), observaciones = "", nota="")
+            hard.save()
                 # else:
                 #     print(dato[4])
                 #     # tipo, create = Tipo.objects.get_or_create(name = mayus_minus(str(dato[1])))
@@ -640,3 +643,4 @@ def cambio_contraseña(request):
         form = CambioContraseñaForm()
 
     return render(request, 'main.html', {'form': form, "link":"cambio_contraseña"})
+

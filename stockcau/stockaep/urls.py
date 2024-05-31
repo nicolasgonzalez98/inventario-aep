@@ -22,5 +22,6 @@ urlpatterns = [
     path("administrar_usuario", views.administrar_users, name="admin_users"),
     path("to_admin", views.to_admin, name="to_admin"),
     path("to_active", views.to_active, name="to_active"),
-    path('cambio-contraseña', views.cambio_contraseña, name='cambio_contraseña')
+    path('cambio-contraseña', views.cambio_contraseña, name='cambio_contraseña'),
+    path("actualizar", views.cargar_nuevo, name="actualizar")
 ]
